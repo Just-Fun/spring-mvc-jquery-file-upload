@@ -107,9 +107,7 @@ public class FileController {
                     }
                 }
             }
-
             files.add(fileMeta);
-
         }
         return files;
     }
