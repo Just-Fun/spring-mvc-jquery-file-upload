@@ -1,0 +1,6 @@
+# Created by .ignore support plugin (hsz.mobi)
+.DS_Store
+.classpath
+.idea/
+spring-mvc-jquery-file-upload.iml
+target/
