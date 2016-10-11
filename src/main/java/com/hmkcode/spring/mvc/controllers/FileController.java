@@ -25,6 +25,7 @@ import com.hmkcode.spring.mvc.data.FileMeta;
 @Controller
 @RequestMapping("/controller")
 public class FileController {
+    PostgreSQLManager manager; // TODO bean
 
     LinkedList<FileMeta> files = new LinkedList<FileMeta>();
     FileMeta fileMeta = null;
@@ -65,7 +66,7 @@ public class FileController {
             String fileName = mpf.getOriginalFilename();
             InputStream inputStream = mpf.getInputStream();
             long size = mpf.getSize();
-            PostgreSQLManager manager;
+
             manager = new PostgreSQLManager();
             manager.insertImage(fileName, inputStream, size);
 
