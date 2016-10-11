@@ -63,50 +63,12 @@ public class FileController {
             fileMeta.setFileType(mpf.getContentType());
 
             String fileName = mpf.getOriginalFilename();
+            InputStream inputStream = mpf.getInputStream();
+            long size = mpf.getSize();
             PostgreSQLManager manager;
-            Connection connection = null;
-            try {
-                manager = new PostgreSQLManager();
-                connection = manager.getConnection();
-                // constructs SQL statement
-                String sql = "INSERT INTO contacts (first_name, last_name, photo, photo_name) values (?, ?, ?, ?)";
-//                !!!
-                connection.setAutoCommit(false);
-                PreparedStatement statement = connection.prepareStatement(sql);
-                statement.setString(1, "TestNew2");
-                statement.setString(2, "TestnewLastName2");
+            manager = new PostgreSQLManager();
+            manager.insertImage(fileName, inputStream, size);
 
-                InputStream inputStream = mpf.getInputStream();
-
-                long size = mpf.getSize();
-                if (inputStream != null) {
-                    // fetches input stream of the upload file for the blob column
-                    statement.setBinaryStream(3, inputStream, (int) size);
-//                statement.setBlob(3, inputStream);
-//                statement.setClob(3, );
-                }
-
-                statement.setString(4, fileName);
-                // sends the statement to the database server
-                int row = statement.executeUpdate();
-                connection.commit();  //  добавил в паре с connection.setAutoCommit(false);,
-                // когда ругалось на setBlob, сейчас возможно не актуально
-                if (row > 0) {
-                    System.out.println("row > 0");
-                }
-            } catch (SQLException ex) {
-                System.out.println("row > 0" + ex.getMessage());
-                ex.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    // closes the database connection
-                    try {
-                        connection.close();
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
             files.add(fileMeta);
         }
         return files;
@@ -119,7 +81,7 @@ public class FileController {
      * @param value : value from the URL
      * @return void
      ****************************************************/
-    @RequestMapping(value = "/get/{value}", method = RequestMethod.GET)
+   /* @RequestMapping(value = "/get/{value}", method = RequestMethod.GET)
     public void get(HttpServletResponse response, @PathVariable String value) {
         FileMeta getFile = files.get(Integer.parseInt(value));
         try {
@@ -131,6 +93,6 @@ public class FileController {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }
+    }*/
 
 }

@@ -77,7 +77,7 @@
     </dependencies>
 
     <build>
-        <finalName>spring-mvc-jquery-file-upload</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
 
             <plugin>

@@ -1,5 +1,6 @@
 package com.hmkcode.spring.mvc.model;
 
+import com.hmkcode.spring.mvc.data.FileMeta;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
@@ -80,19 +81,18 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-/*The sample table is created as below to have a blob field to store file.
-CREATE TABLE t1 (c1 INT PRIMARY KEY NOT NULL, c2 BLOB(5M));*/
-    public void insertImage() {
-        String query = "INSERT INTO t1 VALUES (?,?)";
+    public void insertImage(String fileName, InputStream inputStream, long size) {
+        connection = getConnection();
+        String query = "INSERT INTO files (name, file, status, session) values (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setInt(1, 100);
-            File fBlob = new File("image1.gif");
-            FileInputStream is = new FileInputStream(fBlob);
-            pstmt.setBinaryStream(2, is, (int) fBlob.length());
-            pstmt.execute();
+//            connection.setAutoCommit(false);
+            pstmt.setString(1, fileName);
+            pstmt.setBinaryStream(2, inputStream, (int) size);
+            pstmt.setString(3, "upload");
+            pstmt.setInt(4, 1);
+            pstmt.executeUpdate();
+//            connection.commit();
         } catch (SQLException e) {
-            throw new RuntimeException(e.getLocalizedMessage());
-        } catch (FileNotFoundException e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
     }
