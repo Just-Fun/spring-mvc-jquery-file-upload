@@ -18,14 +18,14 @@ public class InputStreamToStringExample {
     public static void main(String[] args) throws IOException {
         PostgreSQLManager manager = new PostgreSQLManager();
 
-        InputStream inputStream = manager.selectFile(10);
+        InputStream inputStream = manager.selectFile(11);
         new InputStreamToStringExample().getStringFromInputStream(inputStream);
 
-        for (Map<String, Integer> map : maps) {
+       /* for (Map<String, Integer> map : maps) {
             for (Map.Entry<String, Integer> entry : map.entrySet()) {
                 System.out.println(entry.getKey() + " : " + entry.getValue());
             }
-        }
+        }*/
 
         JsonDocument jsonDocument = new JsonDocument(map);
         String string = jsonDocument.toString();
