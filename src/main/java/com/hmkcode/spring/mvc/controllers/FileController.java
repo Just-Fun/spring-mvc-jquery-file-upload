@@ -2,9 +2,6 @@ package com.hmkcode.spring.mvc.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -12,8 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,7 +63,7 @@ public class FileController {
             long size = mpf.getSize();
 
             manager = new PostgreSQLManager();
-            manager.insertImage(fileName, inputStream, size);
+            manager.insert(fileName, inputStream, size);
 
             files.add(fileMeta);
         }
