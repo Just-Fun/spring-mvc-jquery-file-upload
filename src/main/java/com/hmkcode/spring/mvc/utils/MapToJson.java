@@ -37,7 +37,6 @@ public class MapToJson {
 
     private static void writeInFile(File file, String content) {
         try (FileOutputStream fop = new FileOutputStream(file)) {
-            // if file doesn't exists, then create it
             if (!file.exists()) {
                 file.createNewFile();
             }

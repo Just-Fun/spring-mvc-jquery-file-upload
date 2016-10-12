@@ -18,8 +18,8 @@ public class InputStreamToStringExample {
     public static void main(String[] args) throws IOException {
         PostgreSQLManager manager = new PostgreSQLManager();
 
-        InputStream inputStream = manager.selectFile(11);
-        new InputStreamToStringExample().getStringFromInputStream(inputStream);
+        InputStream inputStream = manager.selectFile(16);
+        new InputStreamToStringExample().getLinesAddToMap(inputStream);
 
        /* for (Map<String, Integer> map : maps) {
             for (Map.Entry<String, Integer> entry : map.entrySet()) {
@@ -41,7 +41,7 @@ public class InputStreamToStringExample {
         }
     }
 
-    public void getStringFromInputStream(InputStream is) {
+    public void getLinesAddToMap(InputStream is) {
         map = new LinkedHashMap<>();
         BufferedReader br = null;
         String line;
