@@ -47,7 +47,7 @@ public class PostgreSQLManager implements DatabaseManager {
             userName = property.getProperty("userName");
             password = property.getProperty("password");
         } catch (IOException e) {
-            throw new RuntimeException("Properties do not loaded. " + e.getCause());
+            throw new RuntimeException("Some trouble with loading properties: " + e.getCause());
         }
     }
 
@@ -84,7 +84,6 @@ public class PostgreSQLManager implements DatabaseManager {
     }
 
     public void insert(String fileName, InputStream inputStream, long size) {
-        connection = getConnection(); // TODO MOVE TO CONSTRUCTOR
         String query = "INSERT INTO files (name, file, status, session) values (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 //            connection.setAutoCommit(false);
