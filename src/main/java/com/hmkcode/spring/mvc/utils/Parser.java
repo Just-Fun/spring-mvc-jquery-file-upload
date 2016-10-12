@@ -35,33 +35,11 @@ public class Parser {
         map1.put("Some string2", 1);
         System.out.println(map1.size());
         map1.forEach((s, integer) -> System.out.println(s + " : " + integer));
-      /*  map1.put("Some string", 0);
-        map2.put("Some string", 0);
-        map3.put("Some string2", 0);
-        listOfMaps.add(map1);
-        listOfMaps.add(map2);
-        listOfMaps.add(map3);*/
 
-//        String str = new String(bytes, StandardCharsets.UTF_8);
-
-//        String str = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 
         String s = "ksdckbs\nfvl\ndfvf\n\n";
 //        byte[] bytes = s.getBytes();
         byte[] bytes = s.getBytes(Charset.forName("UTF-8"));
-        /*for (byte b : bytes) {
-            String oneByteString = new String(new byte[] { b });
-            System.out.println(b);
-            System.out.println(oneByteString);
-        }*/
-
-       /* byte DELIMITER = (byte) '\n';
-        byte[] bytes1 = "\n".getBytes(Charset.forName("UTF-8"));
-
-        System.out.println(DELIMITER);
-        System.out.println(bytes1[0]);
-//        findString(s);
-        System.out.println(maps.size());*/
     }
 
     private static void findCharsFromBytes(byte[] bytes) {

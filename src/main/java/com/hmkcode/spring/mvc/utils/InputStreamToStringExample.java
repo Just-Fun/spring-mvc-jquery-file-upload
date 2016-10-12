@@ -1,5 +1,7 @@
 package com.hmkcode.spring.mvc.utils;
 
+import com.hmkcode.spring.mvc.model.PostgreSQLManager;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,20 +19,13 @@ import java.util.Set;
 public class InputStreamToStringExample {
     private static Set<Map<String, Integer>> maps = new LinkedHashSet<>();
     static Map<String, Integer> map1 = new LinkedHashMap<>();
-    ;
 
     public static void main(String[] args) throws IOException {
-        /*InputStream is = new ByteArrayInputStream("file content..blah blah".getBytes());
-        String result = getStringFromInputStream(is);
-        System.out.println(result);
-        System.out.println("Done");*/
-        String line1 = "Some string1";
-        String line2 = "Some string1";
-        String line3 = "Some string2";
-        addLinesToMap(line1);
-        addLinesToMap(line2);
-        addLinesToMap(line3);
-        System.out.println(map1.size());
+        PostgreSQLManager manager = new PostgreSQLManager();
+
+        InputStream inputStream = manager.selectFile(10);
+        getStringFromInputStream(inputStream);
+
         map1.forEach((s, integer) -> System.out.println(s + " : " + integer));
     }
 
@@ -40,20 +35,18 @@ public class InputStreamToStringExample {
         } else {
             map1.put(line, 1);
         }
-        map1.put("Some string2", 1);
     }
 
     // convert InputStream to String
-    public static String getStringFromInputStream(InputStream is) {
-
+    public static void getStringFromInputStream(InputStream is) {
         BufferedReader br = null;
-        StringBuilder sb = new StringBuilder();
-
         String line;
         try {
             br = new BufferedReader(new InputStreamReader(is));
             while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
+                if (!line.isEmpty()) {
+                    addLinesToMap(line);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,7 +59,9 @@ public class InputStreamToStringExample {
                 }
             }
         }
-        return sb.toString();
     }
-
 }
+/*string = System.Text.Encoding.UTF8.GetString(byteArray);
+//                        System.Text.Encoding.UTF8.GetString(buf).TrimEnd('\0');
+//                        string = new String(bufferToString, StandardCharsets.UTF_8);
+                        string = new String(bufferToString, StandardCharsets.UTF_8).trim();*/
