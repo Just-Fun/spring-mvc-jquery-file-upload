@@ -81,8 +81,8 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-    public void insertImage(String fileName, InputStream inputStream, long size) {
-        connection = getConnection();
+    public void insert(String fileName, InputStream inputStream, long size) {
+        connection = getConnection(); // TODO MOVE TO CONSTRUCTOR
         String query = "INSERT INTO files (name, file, status, session) values (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 //            connection.setAutoCommit(false);
@@ -99,7 +99,7 @@ public class PostgreSQLManager implements DatabaseManager {
 
     public void retrievingImage() {
         try (Statement stmt = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM t1");
+            ResultSet rs = stmt.executeQuery("SELECT file FROM files where id='9'");
             while (rs.next()) {
                 int val1 = rs.getInt(1);
                 InputStream val2 = rs.getBinaryStream(2);
