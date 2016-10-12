@@ -34,6 +34,10 @@ public class PostgreSQLManager implements DatabaseManager {
     private Connection connection;
     private JdbcTemplate template;
 
+    public PostgreSQLManager() {
+        connect();
+    }
+
     private static void loadProperties() {
         Properties property = new Properties();
         try (FileInputStream fis = new FileInputStream(PROPERTIES_FILE)) {
@@ -54,8 +58,7 @@ public class PostgreSQLManager implements DatabaseManager {
         getConnection();
     }
 
-    @Override
-    public Connection getConnection() {
+    private Connection getConnection() {
         try {
             String url = String.format("jdbc:postgresql://%s:%s/%s", host, port, database);
             connection = DriverManager.getConnection(url, userName, password);
@@ -97,16 +100,18 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-    public void retrievingImage() {
-        try (Statement stmt = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT file FROM files where id='9'");
-            while (rs.next()) {
-                int val1 = rs.getInt(1);
-                InputStream val2 = rs.getBinaryStream(2);
+    public InputStream selectFile(int id) {
+        InputStream is = null;
+        String query = String.format("SELECT file FROM files where id='%d'", id);
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            ResultSet resultSet = pst.executeQuery();
+            while (resultSet.next()) {
+               is = resultSet.getBinaryStream(1);
             }
-            rs.close();
+            resultSet.close();
         } catch (SQLException e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
+        return is;
     }
 }
