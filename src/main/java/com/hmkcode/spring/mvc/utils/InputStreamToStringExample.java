@@ -26,6 +26,10 @@ public class InputStreamToStringExample {
                 System.out.println(entry.getKey() + " : " + entry.getValue());
             }
         }
+
+        JsonDocument jsonDocument = new JsonDocument(map);
+        String string = jsonDocument.toString();
+        System.out.println(string);
     }
 
     private void addLinesToMap(String line) {
