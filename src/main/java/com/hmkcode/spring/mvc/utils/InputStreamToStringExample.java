@@ -26,6 +26,7 @@ public class InputStreamToStringExample {
                 System.out.println(entry.getKey() + " : " + entry.getValue());
             }
         }*/
+//        maps.forEach(map -> map.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v)));
 
         JsonDocument jsonDocument = new JsonDocument(map);
         String string = jsonDocument.toString();
@@ -65,7 +66,3 @@ public class InputStreamToStringExample {
         maps.add(map);
     }
 }
-/*string = System.Text.Encoding.UTF8.GetString(byteArray);
-//                        System.Text.Encoding.UTF8.GetString(buf).TrimEnd('\0');
-//                        string = new String(bufferToString, StandardCharsets.UTF_8);
-                        string = new String(bufferToString, StandardCharsets.UTF_8).trim();*/

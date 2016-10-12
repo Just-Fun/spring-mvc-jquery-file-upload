@@ -19,7 +19,7 @@ public class MapToJson {
         map.put("name", 44);
         map.put("age", 29);
 
-        String json = toJson(map);
+        String json = toJsonEachMapNewRow(map);
         System.out.println(json);
 
         String json2 = toJsonOneRow(map);
@@ -39,7 +39,6 @@ public class MapToJson {
         }
     }
 
-
     public static void toJson5(OutputStream out, Map<String, Integer> map) {
         ObjectMapper mapper = new ObjectMapper();
 
@@ -48,10 +47,9 @@ public class MapToJson {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    public static String toJson(Map<String, Integer> map) {
+    public static String toJsonEachMapNewRow(Map<String, Integer> map) {
         String json = "";
         ObjectMapper mapper = new ObjectMapper();
 
