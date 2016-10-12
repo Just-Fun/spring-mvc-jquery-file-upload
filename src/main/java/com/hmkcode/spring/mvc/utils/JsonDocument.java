@@ -4,16 +4,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JsonDocument {
-    private  Map<String, Integer> lines;
+    private  Map<String, Integer> map;
 
     public JsonDocument(Map<String, Integer> map) {
-        lines = map;
+        this.map = map;
     }
 
     @Override
     public String toString() {
-        return lines.entrySet().stream()
-                .map(e -> "{\n\"value\": \"" + e.getKey() + "\",\n\"count\": " + e.getValue() + "\n}")
+        return map.entrySet().stream()
+                .map(e -> String.format("{\n\"value\": \"%s\",\n\"count\": %d\n}", e.getKey(), e.getValue()))
                 .collect(Collectors.joining(",\n", "[\n", "\n]"));
     }
 }
