@@ -1,6 +1,5 @@
 package com.hmkcode.spring.mvc.model;
 
-import com.hmkcode.spring.mvc.data.FileMeta;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
