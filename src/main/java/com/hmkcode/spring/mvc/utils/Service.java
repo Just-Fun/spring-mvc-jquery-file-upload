@@ -1,6 +1,7 @@
 package com.hmkcode.spring.mvc.utils;
 
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
+import com.hmkcode.spring.mvc.result.JsonDocument;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,23 +12,16 @@ import java.util.*;
 /**
  * Created by Serzh on 10/12/16.
  */
-public class InputStreamToStringExample {
+public class Service {
     private static List<Map<String, Integer>> maps = new LinkedList<>();
     static Map<String, Integer> map;
 
     public static void main(String[] args) throws IOException {
+        Service service = new Service();
         PostgreSQLManager manager = new PostgreSQLManager();
-
         InputStream inputStream = manager.selectFile(16);
-        new InputStreamToStringExample().getLinesAddToMap(inputStream);
 
-       /* for (Map<String, Integer> map : maps) {
-            for (Map.Entry<String, Integer> entry : map.entrySet()) {
-                System.out.println(entry.getKey() + " : " + entry.getValue());
-            }
-        }*/
-//        maps.forEach(map -> map.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v)));
-
+        service.getLinesAddToMap(inputStream);
         JsonDocument jsonDocument = new JsonDocument(map);
         String string = jsonDocument.toString();
         System.out.println(string);
@@ -66,3 +60,10 @@ public class InputStreamToStringExample {
         maps.add(map);
     }
 }
+
+ /* for (Map<String, Integer> map : maps) {
+            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                System.out.println(entry.getKey() + " : " + entry.getValue());
+            }
+        }*/
+//        maps.forEach(map -> map.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v)));

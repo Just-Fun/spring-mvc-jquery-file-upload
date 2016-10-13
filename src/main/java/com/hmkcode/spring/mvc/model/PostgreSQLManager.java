@@ -83,14 +83,14 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-    public void insert(String fileName, InputStream inputStream, long size) {
+    public void insert(String fileName, InputStream inputStream, long size, long session) {
         String query = "INSERT INTO files (name, file, status, session) values (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 //            connection.setAutoCommit(false);
             pstmt.setString(1, fileName);
             pstmt.setBinaryStream(2, inputStream, (int) size);
             pstmt.setString(3, "upload");
-            pstmt.setInt(4, 1);
+            pstmt.setLong(4, session);
             pstmt.executeUpdate();
 //            connection.commit();
         } catch (SQLException e) {

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
 import org.springframework.stereotype.Controller;
@@ -22,8 +23,9 @@ import com.hmkcode.spring.mvc.data.FileMeta;
 public class FileController {
     PostgreSQLManager manager; // TODO bean
 
-    LinkedList<FileMeta> files = new LinkedList<FileMeta>();
+    LinkedList<FileMeta> files = new LinkedList<>();
     FileMeta fileMeta = null;
+    long time = System.currentTimeMillis();
 
     /***************************************************
      * URL: /rest/controller/upload
@@ -35,8 +37,11 @@ public class FileController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public
     @ResponseBody
-    LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response) throws IOException {
+    LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 
+//        Temp!!! + put in session
+//        time = System.currentTimeMillis();
+//        session.setAttribute("time", time);
         //1. build an iterator
         Iterator<String> itr = request.getFileNames();
         MultipartFile mpf;
@@ -46,27 +51,39 @@ public class FileController {
 
             //2.1 get next MultipartFile
             mpf = request.getFile(itr.next());
-            System.out.println(mpf.getOriginalFilename() + " uploaded! " + files.size());
+            String originalFilename = mpf.getOriginalFilename();
+            System.out.println(originalFilename + " uploaded!");
 
             //2.2 if files > 10 remove the first from the list
-            if (files.size() >= 10)
+            if (files.size() >= 10) {
                 files.pop();
+            }
 
             //2.3 create new fileMeta
             fileMeta = new FileMeta();
             fileMeta.setFileName(mpf.getOriginalFilename());
             fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
             fileMeta.setFileType(mpf.getContentType());
+//            fileMeta.setTimeCreated(time);
 
             String fileName = mpf.getOriginalFilename();
             InputStream inputStream = mpf.getInputStream();
             long size = mpf.getSize();
 
             manager = new PostgreSQLManager();
-            manager.insert(fileName, inputStream, size);
+            manager.insert(fileName, inputStream, size, time);
+
+            String file = fileMeta.getFileName();
 
             files.add(fileMeta);
+            System.out.println("files.add(fileMeta)" + file);
         }
+        System.out.println("files in list: " + files.size());
+//        String fileName = files.get(0).getFileName();
+        for (FileMeta fileMeta : files) {
+            System.out.println(fileMeta.getFileName() + " : " + time);
+        }
+//        System.out.println(fileName + " : "+ time);
         return files;
     }
 

@@ -1,4 +1,4 @@
-package com.hmkcode.spring.mvc.utils;
+package com.hmkcode.spring.mvc.result;
 
 import java.util.Map;
 import java.util.stream.Collectors;
