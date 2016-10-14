@@ -7,8 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by Serzh on 10/14/16.
@@ -17,35 +15,21 @@ public class Test {
     private static List<Map<String, Integer>> maps = new LinkedList<>();
 
     public static void main(String[] args) {
-        Map<String, Integer> map1 = createMaps();
-        Map<String, Integer> map2 = createMaps();
-        Map<String, Integer> map3 = createMaps();
-        Map<String, Integer> map4 = createMaps();
-        Map<String, Integer> map5 = createMaps();
-        maps.add(map1);
-        maps.add(map2);
-        maps.add(map3);
-        maps.add(map4);
-        maps.add(map5);
-
-        Map<String, Integer> totalVisitCounts = Stream.concat(map1.entrySet().stream(), map2.entrySet().stream())
-                .collect(Collectors.toMap(
-                        entry -> entry.getKey(), // The key
-                        entry -> entry.getValue(), // The value
-                        // The "merger" as a method reference
-                        Integer::sum
-                        )
-                );
+        createMaps();
 
         long begin = System.currentTimeMillis();
-        Map<String, Integer> concatMaps = Service.concatMaps(maps);
+        Map<String, Integer> result = Service.concatMaps(maps);
         long end = System.currentTimeMillis();
 
         System.out.println("time: " + (end - begin));
-        System.out.println("size map: " + concatMaps.size());
+        System.out.println("size map: " + result.size());
+
+        JsonDocument jsonDocument = new JsonDocument(result);
+        String string = jsonDocument.toString();
+        System.out.println("string.length(): " + string.length());
     }
 
-    private static Map<String, Integer> createMaps() {
+    private static Map<String, Integer> createMap() {
         Map<String, Integer> map = new LinkedHashMap<>();
         String devd = "someString";
         int value = 1;
@@ -54,5 +38,18 @@ public class Test {
             map.put(devd, value);
         }
         return map;
+    }
+
+    private static void createMaps() {
+        Map<String, Integer> map1 = createMap();
+        Map<String, Integer> map2 = createMap();
+        Map<String, Integer> map3 = createMap();
+        Map<String, Integer> map4 = createMap();
+        Map<String, Integer> map5 = createMap();
+        maps.add(map1);
+        maps.add(map2);
+        maps.add(map3);
+        maps.add(map4);
+        maps.add(map5);
     }
 }

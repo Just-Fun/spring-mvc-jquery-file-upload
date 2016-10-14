@@ -15,9 +15,9 @@ import java.util.*;
 public class Service {
     private static List<Map<String, Integer>> maps = new LinkedList<>();
     static Map<String, Integer> map;
+    static Map<String, Integer> result;
 
     public static void main(String[] args) throws IOException {
-
         long begin = System.currentTimeMillis();
         Service service = new Service();
         PostgreSQLManager manager = new PostgreSQLManager();
@@ -25,20 +25,22 @@ public class Service {
         List<Integer> selectIdFilesFromSession = manager.selectFiles(1476441073232L);
         for (Integer id : selectIdFilesFromSession) {
             InputStream inputStream = manager.selectFile(id);
-            service.getLinesAndAddToMap(inputStream);
+            service.createMapFromLines(inputStream);
         }
 
         if (maps.size() > 1) {
-            concatMaps(maps);
+            result = concatMaps(maps);
+        } else {
+            result = maps.get(0);
         }
 
-        for (Map<String, Integer> map : maps) {
-            JsonDocument jsonDocument = new JsonDocument(map);
-            String string = jsonDocument.toString();
-            System.out.println(string);
-        }
+        JsonDocument jsonDocument = new JsonDocument(result);
+        String string = jsonDocument.toString();
+        System.out.println(string);
+        System.out.println("string.length(): " + string.length());
+
         long end = System.currentTimeMillis();
-        System.out.println(end - begin);
+        System.out.println("time: " + (end - begin));
     }
 
     //TODO optimized algorithm
@@ -72,7 +74,7 @@ public class Service {
         }
     }
 
-    public void getLinesAndAddToMap(InputStream is) {
+    public void createMapFromLines(InputStream is) {
         map = new LinkedHashMap<>();
         BufferedReader br = null;
         String line;
