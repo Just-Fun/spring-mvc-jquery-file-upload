@@ -41,22 +41,27 @@ public class Service {
         System.out.println(end - begin);
     }
 
-    private static Map<String, Integer> concatMaps(List<Map<String, Integer>> maps) {
+    //TODO optimized algorithm
+    public static Map<String, Integer> concatMaps(List<Map<String, Integer>> maps) {
         Map<String, Integer> result = maps.get(0);
 
         for (int i = 1; i < maps.size(); i++) {
             Map<String, Integer> mapConcat = maps.get(i);
-
-            for (Map.Entry<String, Integer> entry : mapConcat.entrySet()) {
-                String line = entry.getKey();
-                if (result.containsKey(line)) {
-                    result.put(line, result.get(line) + entry.getValue());
-                } else {
-                    result.put(line, entry.getValue());
-                }
-            }
+            Map<String, Integer> concatTwoMaps = concatTwoMaps(result, mapConcat);
         }
         return result;
+    }
+
+    private static Map<String, Integer> concatTwoMaps(Map<String, Integer> map1, Map<String, Integer> map2) {
+        for (Map.Entry<String, Integer> entry : map2.entrySet()) {
+            String line = entry.getKey();
+            if (map1.containsKey(line)) {
+                map1.put(line, map1.get(line) + entry.getValue());
+            } else {
+                map1.put(line, entry.getValue());
+            }
+        }
+        return map1;
     }
 
     private void addLinesToMap(String line) {
