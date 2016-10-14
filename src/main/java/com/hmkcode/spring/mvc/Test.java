@@ -15,7 +15,7 @@ public class Test {
         createMaps();
 
         long begin = System.currentTimeMillis();
-        Map<String, Integer> result = Service.concatMaps(maps);
+        Map<String, Integer> result = new Service().concatMaps(maps);
         long end = System.currentTimeMillis();
 
         System.out.println("time: " + (end - begin));

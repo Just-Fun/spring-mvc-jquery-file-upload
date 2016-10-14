@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,13 +16,10 @@ import java.util.concurrent.Executors;
  */
 public class Service {
     private List<Map<String, Integer>> maps;
-    Map<String, Integer> map;
-    Map<String, Integer> result;
-    PostgreSQLManager manager;
-    ExecutorService executor;
-    InputStream inputStream;
-
-    private ThreadGroup tg;
+    private Map<String, Integer> map;
+    private Map<String, Integer> result;
+    private PostgreSQLManager manager;
+    private ExecutorService executor;
 
     public static void main(String[] args) throws IOException {
         String result = new Service().run(1476441073232L);
@@ -34,7 +30,6 @@ public class Service {
         executor = Executors.newFixedThreadPool(3);
         maps = new ArrayList<>();
         manager = new PostgreSQLManager();
-        tg = new ThreadGroup("threadGroup");
     }
 
     public String run(long session) {
@@ -43,65 +38,37 @@ public class Service {
         selectFileById(selectIdFilesFromSession);
         System.out.println("After selectFileById");
 
-        boolean end = false;
-       /* while (!end) {
-            if (executor.isShutdown()) {
-                checkMaps();
-//                return resultToJson();
-                end = true;
-            }
-        }*/
-        while (!end) {
-            if (tg.activeCount() == 0) {
-                checkMaps();
-//                return resultToJson();
-                end = true;
-            }
+        while (!executor.isTerminated()) {
+            // just wait
         }
-//        checkMaps();
+        checkMaps();
 
         return resultToJson();
     }
 
     private void selectFileById(List<Integer> selectIdFilesFromSession) {
-//        ExecutorService executor = Executors.newFixedThreadPool(3);
         for (Integer id : selectIdFilesFromSession) {
-            System.out.println("Begin id: " + id);
-//            Runnable task = new FilesToMap(id);
-            new Thread(tg, () -> {
-                filesLineToMap(id);
-            }).start();
-
-//            executor.submit(task);
-//            executor.execute(task);
-            System.out.println("After, id: " + id);
-            /*InputStream inputStream = manager.selectFile(id);
-            createMapFromLines(inputStream);*/
+            Runnable task = new FilesToMap(id);
+            executor.execute(task);
         }
-//        executor.shutdown();
-        System.out.println("End of selectFileById");
+        executor.shutdown();
     }
 
-    class FilesToMap implements Runnable {
+    private class FilesToMap implements Runnable {
         private Integer id;
 
-        public FilesToMap(Integer id) {
+        private FilesToMap(Integer id) {
             this.id = id;
         }
 
         @Override
         public void run() {
-            long thread = Thread.currentThread().getId();
-            System.out.println(thread + "threadBeginning maps.size(): " + maps.size());
-            System.out.println("Thread: " + thread);
-
             filesLineToMap(id);
-            System.out.println(thread + "threadEnd maps.size(): " + maps.size());
         }
     }
 
     private void filesLineToMap(Integer id) {
-        inputStream = manager.selectFile(id);
+        InputStream inputStream = manager.selectFile(id);
         createMapFromLines(inputStream);
     }
 
