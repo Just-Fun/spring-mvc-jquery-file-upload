@@ -6,7 +6,7 @@ $(function () {
         	$("tr:has(td)").remove();
             $.each(data.result, function (index, file) {
             	
-            	
+            	$('#uploaded-files tr').slice(1).remove();
                 $("#uploaded-files").append(
                 		$('<tr/>')
                 		.append($('<td/>').text(file.fileName))
