@@ -5,6 +5,8 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import java.io.*;
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -105,6 +107,22 @@ public class PostgreSQLManager implements DatabaseManager {
             ResultSet resultSet = pst.executeQuery();
             while (resultSet.next()) {
                is = resultSet.getBinaryStream(1);
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+        return is;
+    }
+
+    public List<Integer> selectFiles(long session) {
+        int[] ids = null;
+        List<Integer> is = new LinkedList<>();
+        String query = String.format("SELECT id FROM files where session='%d'", session);
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            ResultSet resultSet = pst.executeQuery();
+            while (resultSet.next()) {
+                is.add(resultSet.getInt(1));
             }
             resultSet.close();
         } catch (SQLException e) {
