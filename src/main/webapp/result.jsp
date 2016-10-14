@@ -5,14 +5,16 @@
 <c:set var="baseURL" value="${fn:replace(pageContext.request.requestURL, pageContext.request.requestURI, pageContext.request.contextPath)}" />
 
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Message</title>
-</head>
-<body>
-    ${message}
-</body>
-<br>
-<br>
-<a href="/spring-mvc-jquery-file-upload">Upload one more file</a>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>Message</title>
+    </head>
+    <body>
+        ${message}
+        <br>
+        <br>
+        <div id="toUpload" class="toUpload">
+            <a href="/spring-mvc-jquery-file-upload">Upload one more file</a>
+        </div>
+    </body>
 </html>
