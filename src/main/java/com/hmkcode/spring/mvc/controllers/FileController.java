@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -49,6 +50,7 @@ public class FileController {
         Iterator<String> itr = request.getFileNames();
         MultipartFile mpf;
 
+//        TODO if multiple upload(not one by one) write in DB right, but show in UA - wrong
         //2. get each file
         while (itr.hasNext()) {
 
@@ -93,7 +95,7 @@ public class FileController {
 
     @RequestMapping(value = "/getResult", method = RequestMethod.GET)
     public void getResult(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Service service = new Service();
+        Service service = new Service(); // TODO bean
         String message = service.run(1476441073232L);
         request.setAttribute("message", message);
         request.getRequestDispatcher("/result.jsp").forward(request, response);
