@@ -17,14 +17,46 @@ public class Service {
     static Map<String, Integer> map;
 
     public static void main(String[] args) throws IOException {
+
+        long begin = System.currentTimeMillis();
         Service service = new Service();
         PostgreSQLManager manager = new PostgreSQLManager();
-        InputStream inputStream = manager.selectFile(16);
 
-        service.getLinesAddToMap(inputStream);
-        JsonDocument jsonDocument = new JsonDocument(map);
-        String string = jsonDocument.toString();
-        System.out.println(string);
+        List<Integer> selectIdFilesFromSession = manager.selectFiles(1476441073232L);
+        for (Integer id : selectIdFilesFromSession) {
+            InputStream inputStream = manager.selectFile(id);
+            service.getLinesAndAddToMap(inputStream);
+        }
+
+        if (maps.size() > 1) {
+            concatMaps(maps);
+        }
+
+        for (Map<String, Integer> map : maps) {
+            JsonDocument jsonDocument = new JsonDocument(map);
+            String string = jsonDocument.toString();
+            System.out.println(string);
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(end - begin);
+    }
+
+    private static Map<String, Integer> concatMaps(List<Map<String, Integer>> maps) {
+        Map<String, Integer> result = maps.get(0);
+
+        for (int i = 1; i < maps.size(); i++) {
+            Map<String, Integer> mapConcat = maps.get(i);
+
+            for (Map.Entry<String, Integer> entry : mapConcat.entrySet()) {
+                String line = entry.getKey();
+                if (result.containsKey(line)) {
+                    result.put(line, result.get(line) + entry.getValue());
+                } else {
+                    result.put(line, entry.getValue());
+                }
+            }
+        }
+        return result;
     }
 
     private void addLinesToMap(String line) {
@@ -35,7 +67,7 @@ public class Service {
         }
     }
 
-    public void getLinesAddToMap(InputStream is) {
+    public void getLinesAndAddToMap(InputStream is) {
         map = new LinkedHashMap<>();
         BufferedReader br = null;
         String line;
