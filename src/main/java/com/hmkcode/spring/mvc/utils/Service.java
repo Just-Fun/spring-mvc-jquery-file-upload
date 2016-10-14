@@ -13,7 +13,7 @@ import java.util.*;
  * Created by Serzh on 10/12/16.
  */
 public class Service {
-    private static List<Map<String, Integer>> maps = new LinkedList<>();
+    private static List<Map<String, Integer>> maps = new ArrayList<>();
     static Map<String, Integer> map;
     static Map<String, Integer> result;
     static PostgreSQLManager manager;
@@ -86,7 +86,7 @@ public class Service {
     }
 
     private static void createMapFromLines(InputStream is) {
-        map = new LinkedHashMap<>();
+        map = new HashMap<>();
         BufferedReader br = null;
         String line;
         try {

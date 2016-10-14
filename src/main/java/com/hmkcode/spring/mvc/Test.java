@@ -3,16 +3,13 @@ package com.hmkcode.spring.mvc;
 import com.hmkcode.spring.mvc.result.JsonDocument;
 import com.hmkcode.spring.mvc.utils.Service;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Serzh on 10/14/16.
  */
 public class Test {
-    private static List<Map<String, Integer>> maps = new LinkedList<>();
+    private static List<Map<String, Integer>> maps = new ArrayList<>();
 
     public static void main(String[] args) {
         createMaps();
@@ -30,7 +27,7 @@ public class Test {
     }
 
     private static Map<String, Integer> createMap() {
-        Map<String, Integer> map = new LinkedHashMap<>();
+        Map<String, Integer> map = new HashMap<>();
         String devd = "someString";
         int value = 1;
         for (int i = 0; i < 10000; i++) { // 10000 / 45 = 22 pages, 5 files 22 page each
