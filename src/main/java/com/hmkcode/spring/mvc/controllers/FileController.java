@@ -5,10 +5,13 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
+import com.hmkcode.spring.mvc.utils.Service;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -85,6 +88,15 @@ public class FileController {
         }
 //        System.out.println(fileName + " : "+ time);
         return files;
+    }
+
+
+    @RequestMapping(value = "/getResult", method = RequestMethod.GET)
+    public void getResult(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Service service = new Service();
+        String message = service.run(1476441073232L);
+        request.setAttribute("message", message);
+        request.getRequestDispatcher("/result.jsp").forward(request, response);
     }
 
     /***************************************************

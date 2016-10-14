@@ -16,31 +16,42 @@ public class Service {
     private static List<Map<String, Integer>> maps = new LinkedList<>();
     static Map<String, Integer> map;
     static Map<String, Integer> result;
+    static PostgreSQLManager manager;
 
     public static void main(String[] args) throws IOException {
-        long begin = System.currentTimeMillis();
-        Service service = new Service();
-        PostgreSQLManager manager = new PostgreSQLManager();
+        String result = new Service().run(1476441073232L);
+        System.out.println(result);
+    }
 
-        List<Integer> selectIdFilesFromSession = manager.selectFiles(1476441073232L);
+    public String run(long session) {
+        manager = new PostgreSQLManager();
+        List<Integer> selectIdFilesFromSession = manager.selectFiles(session);
+
+        selectFileById(selectIdFilesFromSession);
+
+        checkMaps();
+
+        return resultToJson();
+    }
+
+    private static void selectFileById(List<Integer> selectIdFilesFromSession) {
         for (Integer id : selectIdFilesFromSession) {
             InputStream inputStream = manager.selectFile(id);
-            service.createMapFromLines(inputStream);
+            createMapFromLines(inputStream);
         }
+    }
 
+    private static String resultToJson() {
+        JsonDocument jsonDocument = new JsonDocument(result);
+        return jsonDocument.toString();
+    }
+
+    private static void checkMaps() {
         if (maps.size() > 1) {
             result = concatMaps(maps);
         } else {
             result = maps.get(0);
         }
-
-        JsonDocument jsonDocument = new JsonDocument(result);
-        String string = jsonDocument.toString();
-        System.out.println(string);
-        System.out.println("string.length(): " + string.length());
-
-        long end = System.currentTimeMillis();
-        System.out.println("time: " + (end - begin));
     }
 
     //TODO optimized algorithm
@@ -49,24 +60,24 @@ public class Service {
 
         for (int i = 1; i < maps.size(); i++) {
             Map<String, Integer> mapConcat = maps.get(i);
-            Map<String, Integer> concatTwoMaps = concatTwoMaps(result, mapConcat);
+            concatTwoMaps(result, mapConcat);
         }
         return result;
     }
 
-    private static Map<String, Integer> concatTwoMaps(Map<String, Integer> map1, Map<String, Integer> map2) {
+    private static Map<String, Integer> concatTwoMaps(Map<String, Integer> result, Map<String, Integer> map2) {
         for (Map.Entry<String, Integer> entry : map2.entrySet()) {
             String line = entry.getKey();
-            if (map1.containsKey(line)) {
-                map1.put(line, map1.get(line) + entry.getValue());
+            if (result.containsKey(line)) {
+                result.put(line, result.get(line) + entry.getValue());
             } else {
-                map1.put(line, entry.getValue());
+                result.put(line, entry.getValue());
             }
         }
-        return map1;
+        return result;
     }
 
-    private void addLinesToMap(String line) {
+    private static void addLinesToMap(String line) {
         if (map.containsKey(line)) {
             map.put(line, map.get(line) + 1);
         } else {
@@ -74,7 +85,7 @@ public class Service {
         }
     }
 
-    public void createMapFromLines(InputStream is) {
+    private static void createMapFromLines(InputStream is) {
         map = new LinkedHashMap<>();
         BufferedReader br = null;
         String line;
@@ -99,10 +110,3 @@ public class Service {
         maps.add(map);
     }
 }
-
- /* for (Map<String, Integer> map : maps) {
-            for (Map.Entry<String, Integer> entry : map.entrySet()) {
-                System.out.println(entry.getKey() + " : " + entry.getValue());
-            }
-        }*/
-//        maps.forEach(map -> map.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v)));
