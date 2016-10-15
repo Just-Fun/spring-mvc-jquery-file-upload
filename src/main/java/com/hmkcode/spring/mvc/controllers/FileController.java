@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -29,7 +28,7 @@ public class FileController {
 
     LinkedList<FileMeta> files = new LinkedList<>();
     FileMeta fileMeta = null;
-    long time = System.currentTimeMillis();
+    long sessionTime /*System.currentTimeMillis()*/;
 
     /***************************************************
      * URL: /rest/controller/upload
@@ -43,17 +42,17 @@ public class FileController {
     @ResponseBody
     LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 
-//        Temp!!! + put in session
-//        time = System.currentTimeMillis();
-//        session.setAttribute("time", time);
-        //1. build an iterator
+        String sessionId = session.getId();
+
+        sessionTime = session.getCreationTime();
+
         Iterator<String> itr = request.getFileNames();
         MultipartFile mpf;
 
 //        TODO if multiple upload(not one by one) write in DB right, but show in UA - wrong
         //2. get each file
         while (itr.hasNext()) {
-
+//            sessionTime = System.currentTimeMillis();
             //2.1 get next MultipartFile
             mpf = request.getFile(itr.next());
             String originalFilename = mpf.getOriginalFilename();
@@ -69,35 +68,40 @@ public class FileController {
             fileMeta.setFileName(mpf.getOriginalFilename());
             fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
             fileMeta.setFileType(mpf.getContentType());
-//            fileMeta.setTimeCreated(time);
+//            fileMeta.setTimeCreated(sessionTime);
 
             String fileName = mpf.getOriginalFilename();
             InputStream inputStream = mpf.getInputStream();
             long size = mpf.getSize();
 
-            manager = new PostgreSQLManager();
-            manager.insert(fileName, inputStream, size, time);
+            manager = new PostgreSQLManager();// TODO bean
+            manager.insert(fileName, inputStream, size, sessionTime);
 
             String file = fileMeta.getFileName();
 
             files.add(fileMeta);
             System.out.println("files.add(fileMeta)" + file);
+//            System.out.println("sessionTime: " + sessionTime);
         }
-        System.out.println("files in list: " + files.size());
+//        System.out.println("files in list: " + files.size());
 //        String fileName = files.get(0).getFileName();
         for (FileMeta fileMeta : files) {
-            System.out.println(fileMeta.getFileName() + " : " + time);
+            System.out.println(fileMeta.getFileName() + " : " + sessionTime);
         }
-//        System.out.println(fileName + " : "+ time);
+//        System.out.println(fileName + " : "+ sessionTime);
         return files;
     }
 
 
     @RequestMapping(value = "/getResult", method = RequestMethod.GET)
-    public void getResult(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void getResult(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
         Service service = new Service(); // TODO bean
-        String message = service.run(1476441073232L);
+        String message = service.run(sessionTime);
         request.setAttribute("message", message);
+        System.out.println("/getResult, sessionTime: " + sessionTime);
+        String sessionId = session.getId();
+//        System.out.println("/getResult, session id: " + sessionId);
+        session.invalidate();
         request.getRequestDispatcher("/result.jsp").forward(request, response);
     }
 
