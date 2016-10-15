@@ -14,16 +14,17 @@ import java.util.concurrent.Executors;
 /**
  * Created by Serzh on 10/12/16.
  */
+// TODO implement MapReduce
 public class Service {
     private List<Map<String, Integer>> maps;
     private Map<String, Integer> map;
     private Map<String, Integer> result;
-    private PostgreSQLManager manager;
+    private PostgreSQLManager manager; // TODO bean
     private ExecutorService executor;
 
     public static void main(String[] args) throws IOException {
-        String result = new Service().run(1476441073232L);
-        System.out.println(result);
+//        String result = new Service().run(1476441073232L);
+//        System.out.println(result);
     }
 
     public Service() {
@@ -32,18 +33,18 @@ public class Service {
         manager = new PostgreSQLManager();
     }
 
-    public String run(long session) {
+    public Map<String, Integer> run(long session) {
         List<Integer> selectIdFilesFromSession = manager.selectFiles(session);
 
         selectFileById(selectIdFilesFromSession);
         System.out.println("After selectFileById");
 
         while (!executor.isTerminated()) {
-            // just wait
+            // wait until executing completed
         }
         checkMaps();
 
-        return resultToJson();
+        return result;
     }
 
     private void selectFileById(List<Integer> selectIdFilesFromSession) {
@@ -72,21 +73,12 @@ public class Service {
         createMapFromLines(inputStream);
     }
 
-    private String resultToJson() {
-        JsonDocument jsonDocument = new JsonDocument(result);
-        return jsonDocument.toString();
-    }
-
     private void checkMaps() {
         System.out.println("inside checkMaps(), maps.size(): " + maps.size());
         if (maps.size() > 1) {
             result = concatMaps(maps);
         } else {
-//            if (maps.size() == 0) { // заглушка
-//                result = new LinkedHashMap<>();
-//            } else {
-                result = maps.get(0);
-//            }
+            result = maps.get(0);
         }
     }
 

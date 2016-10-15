@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -92,17 +93,18 @@ public class FileController {
         return files;
     }
 
-
     @RequestMapping(value = "/getResult", method = RequestMethod.GET)
     public void getResult(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
         Service service = new Service(); // TODO bean
-        String message = service.run(sessionTime);
-        request.setAttribute("message", message);
+
+        Map<String, Integer> result = service.run(sessionTime);
+        request.setAttribute("map", result);
+
         System.out.println("/getResult, sessionTime: " + sessionTime);
         String sessionId = session.getId();
 //        System.out.println("/getResult, session id: " + sessionId);
         session.invalidate();
-        request.getRequestDispatcher("/result.jsp").forward(request, response);
+        request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
     }
 
     /***************************************************

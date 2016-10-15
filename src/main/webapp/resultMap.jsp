@@ -13,7 +13,7 @@
         [<br/>
         <c:forEach items="${map}" var="entry" varStatus="loop">
             { <br/>
-            "value": ${entry.key}, <br/>
+            "value": "${entry.key}", <br/>
             "count": ${entry.value} <br/>
              }
              ${!loop.last ? ',' : ''}<br/>
