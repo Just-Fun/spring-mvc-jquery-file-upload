@@ -82,11 +82,19 @@ public class Service {
         if (maps.size() > 1) {
             result = concatMaps(maps);
         } else {
-            if (maps.size() == 0) { // заглушка
-                result = new HashMap<>();
-            } else {
+//            if (maps.size() == 0) { // заглушка
+//                result = new LinkedHashMap<>();
+//            } else {
                 result = maps.get(0);
-            }
+//            }
+        }
+    }
+
+    private void addLinesToMap(String line) {
+        if (map.containsKey(line)) {
+            map.put(line, map.get(line) + 1);
+        } else {
+            map.put(line, 1);
         }
     }
 
@@ -113,16 +121,8 @@ public class Service {
         return result;
     }
 
-    private void addLinesToMap(String line) {
-        if (map.containsKey(line)) {
-            map.put(line, map.get(line) + 1);
-        } else {
-            map.put(line, 1);
-        }
-    }
-
     private void createMapFromLines(InputStream is) {
-        map = new HashMap<>();
+        map = new LinkedHashMap<>();
         BufferedReader br = null;
         String line;
         try {
