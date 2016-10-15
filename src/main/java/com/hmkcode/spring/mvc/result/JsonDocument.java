@@ -9,11 +9,19 @@ public class JsonDocument {
     public JsonDocument(Map<String, Integer> map) {
         this.map = map;
     }
-
+/*
     @Override
     public String toString() {
         return map.entrySet().stream()
                 .map(e -> String.format("{\n\"value\": \"%s\",\n\"count\": %d\n}", e.getKey(), e.getValue()))
                 .collect(Collectors.joining(",\n", "[\n", "\n]"));
+    }*/
+
+    @Override
+    public String toString() {
+        return map.entrySet().stream()
+                .map(e -> String.format("{<br/>\"value\": \"%s\",<br/>\"count\": %d<br/>}", e.getKey(), e.getValue()))
+                .collect(Collectors.joining(",<br/>", "[<br/>", "<br/>]"));
     }
+//    <br />
 }
