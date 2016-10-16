@@ -5,9 +5,7 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import java.io.*;
 import java.sql.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by Serzh on 10/7/16.
@@ -90,7 +88,7 @@ public class PostgreSQLManager implements DatabaseManager {
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 //            connection.setAutoCommit(false);
             pstmt.setString(1, fileName);
-            pstmt.setBinaryStream(2, inputStream, (int) size);
+            pstmt.setBinaryStream(2, inputStream/*, (int) size*/); //TODO check if size need
             pstmt.setString(3, "upload");
             pstmt.setLong(4, session);
             pstmt.executeUpdate();
@@ -100,13 +98,46 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
+    /*public void insertResult(InputStream inputStream) {
+        String query = "INSERT INTO results (result) values (?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+//            connection.setAutoCommit(false);
+            pstmt.setBinaryStream(1, inputStream);
+            pstmt.executeUpdate();
+//            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }*/
+
+    public void insertResult2(Map<String, Integer> map) {
+
+        String query = "INSERT INTO results (result) VALUES (?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream output = new ObjectOutputStream(bos);
+            output.writeObject(map);
+
+            output.flush();
+            output.close();
+
+            byte[] data = bos.toByteArray();
+            ps.setObject(1, data);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public InputStream selectFile(int id) {
         InputStream is = null;
         String query = String.format("SELECT file FROM files where id='%d'", id);
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             ResultSet resultSet = pst.executeQuery();
             while (resultSet.next()) {
-               is = resultSet.getBinaryStream(1);
+                is = resultSet.getBinaryStream(1);
             }
             resultSet.close();
         } catch (SQLException e) {
@@ -129,5 +160,39 @@ public class PostgreSQLManager implements DatabaseManager {
             throw new RuntimeException(e.getLocalizedMessage());
         }
         return is;
+    }
+
+    public InputStream selectResult(int id) {
+        InputStream is = null;
+        String query = String.format("SELECT result FROM results where id='%d'", id);
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            ResultSet resultSet = pst.executeQuery();
+            while (resultSet.next()) {
+                is = resultSet.getBinaryStream(1);
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+        return is;
+    }
+
+    public LinkedHashMap<String, Integer> getMapFromResult(int id) throws Exception {
+        LinkedHashMap<String, Integer> mc = null;
+        String query = String.format("SELECT result FROM results where id='%d'", id);
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                try {
+                    ByteArrayInputStream bais = new ByteArrayInputStream(rs.getBytes(1));
+                    ObjectInputStream ins = new ObjectInputStream(bais);
+                    mc = (LinkedHashMap) ins.readObject();
+                    ins.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return mc;
+        }
     }
 }
