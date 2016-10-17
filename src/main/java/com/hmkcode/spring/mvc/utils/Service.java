@@ -1,7 +1,6 @@
 package com.hmkcode.spring.mvc.utils;
 
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
-import com.hmkcode.spring.mvc.result.JsonDocument;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,15 +16,21 @@ import java.util.concurrent.Executors;
 // TODO implement MapReduce
 public class Service {
     private List<Map<String, Integer>> maps;
-    private Map<String, Integer> map;
+
+//    private Map<String, Integer> map;
     private Map<String, Integer> result;
     private PostgreSQLManager manager; // TODO bean
     private ExecutorService executor;
 
-    public static void main(String[] args) throws IOException {
+   /* public Map<String, Integer> getMap() {
+//        return map;
+        return result;
+    }*/
+
+    /*public static void main(String[] args) throws IOException {
 //        String result = new Service().run(1476441073232L);
 //        System.out.println(result);
-    }
+    }*/
 
     public Service() {
         executor = Executors.newFixedThreadPool(3);
@@ -34,9 +39,9 @@ public class Service {
     }
 
     public Map<String, Integer> run(long session) {
-        List<Integer> selectIdFilesFromSession = manager.selectFiles(session);
+        List<Integer> filesId = manager.selectIds(session);
 
-        selectFileById(selectIdFilesFromSession);
+        selectFileById(filesId);
         System.out.println("After selectFileById");
 
         while (!executor.isTerminated()) {
@@ -47,8 +52,8 @@ public class Service {
         return result;
     }
 
-    private void selectFileById(List<Integer> selectIdFilesFromSession) {
-        for (Integer id : selectIdFilesFromSession) {
+    private void selectFileById(List<Integer> filesId) {
+        for (Integer id : filesId) {
             Runnable task = new FilesToMap(id);
             executor.execute(task);
         }
@@ -56,7 +61,7 @@ public class Service {
     }
 
     private class FilesToMap implements Runnable {
-        private Integer id;
+        private Integer id; // int?
 
         private FilesToMap(Integer id) {
             this.id = id;
@@ -82,7 +87,7 @@ public class Service {
         }
     }
 
-    private void addLinesToMap(String line) {
+    private void addLinesToMap( Map<String, Integer> map, String line) {
         if (map.containsKey(line)) {
             map.put(line, map.get(line) + 1);
         } else {
@@ -114,14 +119,14 @@ public class Service {
     }
 
     private void createMapFromLines(InputStream is) {
-        map = new LinkedHashMap<>();
+        Map<String, Integer> map = new LinkedHashMap<>();
         BufferedReader br = null;
         String line;
         try {
             br = new BufferedReader(new InputStreamReader(is));
             while ((line = br.readLine()) != null) {
                 if (!line.isEmpty()) {
-                    addLinesToMap(line);
+                    addLinesToMap(map, line);
                 }
             }
         } catch (IOException e) {
@@ -135,10 +140,10 @@ public class Service {
                 }
             }
         }
-        mapAddToMaps();
+        mapAddToMaps(map);
     }
 
-    private synchronized void mapAddToMaps() {
+    private synchronized void mapAddToMaps( Map<String, Integer> map) {
         maps.add(map);
     } // надо ли?
 }
