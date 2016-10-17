@@ -79,6 +79,11 @@ public class Service {
     }
 
     private void checkMaps() {
+        if (maps.size() == 0) {
+            Map<String, Integer> map = new LinkedHashMap<>();
+            map.put("There is now line to show.", null);
+            maps.add(map);
+        }
         System.out.println("inside checkMaps(), maps.size(): " + maps.size());
         if (maps.size() > 1) {
             result = concatMaps(maps);
