@@ -18,7 +18,7 @@ public class Test2 {
 //        manager.insertResult(1476703027769L, map);
 
 //        LinkedHashMap<String, Integer> object = manager.getMapFromResultById(20);
-        LinkedHashMap<String, Integer> object = manager.getMapFromResultBySession(1476716903368L);
+        LinkedHashMap<String, Integer> object = manager.getMapFromResultBySession(1476731311021L);
         object.forEach((k, v) -> System.out.println(k.toString() + " : " + v.toString()) );
     }
 

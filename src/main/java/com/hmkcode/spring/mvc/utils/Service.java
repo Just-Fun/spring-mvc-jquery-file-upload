@@ -17,20 +17,9 @@ import java.util.concurrent.Executors;
 public class Service {
     private List<Map<String, Integer>> maps;
 
-//    private Map<String, Integer> map;
     private Map<String, Integer> result;
     private PostgreSQLManager manager; // TODO bean
     private ExecutorService executor;
-
-   /* public Map<String, Integer> getMap() {
-//        return map;
-        return result;
-    }*/
-
-    /*public static void main(String[] args) throws IOException {
-//        String result = new Service().run(1476441073232L);
-//        System.out.println(result);
-    }*/
 
     public Service() {
         executor = Executors.newFixedThreadPool(3);

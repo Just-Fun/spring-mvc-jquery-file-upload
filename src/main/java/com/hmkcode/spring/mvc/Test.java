@@ -1,6 +1,5 @@
 package com.hmkcode.spring.mvc;
 
-import com.hmkcode.spring.mvc.result.JsonDocument;
 import com.hmkcode.spring.mvc.utils.Service;
 
 import java.util.*;
@@ -20,10 +19,6 @@ public class Test {
 
         System.out.println("time: " + (end - begin));
         System.out.println("size map: " + result.size());
-
-        JsonDocument jsonDocument = new JsonDocument(result);
-        String string = jsonDocument.toString();
-        System.out.println("string.length(): " + string.length());
     }
 
     private static Map<String, Integer> createMap() {
