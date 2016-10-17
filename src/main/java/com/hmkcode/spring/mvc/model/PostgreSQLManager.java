@@ -98,119 +98,39 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-    /*jdbcTemplate.update(conn -> {
-     PreparedStatement ps = conn.prepareStatement( "INSERT INTO table (hstore_col, jsonb_col)" );
-     ps.setObject( 1, hstoreMap );
-     ps.setObject( 2, jsonbObj );
-});*/
-
-    /*// define query arguments
-48
-        Object[] params = new Object[] { name, surname, title, new Date() };
-
-        // define SQL types of the arguments
-51
-        int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.TIMESTAMP };
-
-        // execute insert query to insert the data
-54
-        // return number of row / rows processed by the executed query
-55
-        int row = template.update(insertSql, params, types);
-*/
-
-    public void insertResult(long session, Map<String, Integer> map) throws IOException {
-
+    public void insertResult(long session, Map<String, Integer> map) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream output = new ObjectOutputStream(bos);
-        output.writeObject(map);
-
-        output.flush();
-        output.close();
-
-        byte[] data = bos.toByteArray();
-
-        Object[] params = new Object[] { session, data};
-        int[] types = new int[] { Types.BIGINT, Types.VARBINARY};
-        String query = "INSERT INTO results (session,result) VALUES (?,?)";
-        template.update(query, params, types);
-
-//        template.update(query, session, map);
-/*        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
             ObjectOutputStream output = new ObjectOutputStream(bos);
             output.writeObject(map);
 
             output.flush();
             output.close();
-
-            byte[] data = bos.toByteArray();
-            ps.setLong(1, session);
-            ps.setObject(2, data);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getLocalizedMessage());
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
-    }
-
-//    @Override
-    public void insert(String tableName, Map<String, Object> columnData) {
-        StringJoiner tableNames = new StringJoiner(", ");
-        StringJoiner values = new StringJoiner("', '", "'", "'");
-        for (Map.Entry<String, Object> pair : columnData.entrySet()) {
-            tableNames.add(pair.getKey());
-            values.add(pair.getValue().toString());
         }
-        template.update(String.format("INSERT INTO public.%s(%s) values (%s)",
-                tableName, tableNames.toString(), values.toString()));
-    }
+        byte[] data = bos.toByteArray();
 
+        String query = "INSERT INTO results (session,result) VALUES (?,?)";
+        template.update(query, session, data);
+    }
 
     public InputStream selectFileById(int id) {
-        return template.queryForObject(String.format("SELECT file FROM files where id='%d'", id),
-                (rs, rowNum) -> rs.getBinaryStream("file"));
-     /*   InputStream is = null;
         String query = String.format("SELECT file FROM files where id='%d'", id);
-        try (PreparedStatement pst = connection.prepareStatement(query)) {
-            ResultSet resultSet = pst.executeQuery();
-            while (resultSet.next()) {
-                is = resultSet.getBinaryStream(1);
-            }
-            resultSet.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getLocalizedMessage());
-        }
-        return is;*/
-    }
-
-//    @Override
-    public int getTableSize(String tableName) {
-        return template.queryForObject(String.format("SELECT COUNT(*) FROM public.%s", tableName), Integer.class);
+        return template.queryForObject(query,
+                (rs, rowNum) -> rs.getBinaryStream("file"));
     }
 
     public List<Integer> selectIdBySession(long session) {
-        return new LinkedList<>(template.query(String.format("SELECT id FROM files WHERE session='%d'", session),
-                (rs, rowNum) -> rs.getInt("id")
-        ));
-       /* List<Integer> is = new LinkedList<>();
         String query = String.format("SELECT id FROM files WHERE session='%d'", session);
-        try (PreparedStatement pst = connection.prepareStatement(query)) {
-            ResultSet resultSet = pst.executeQuery();
-            while (resultSet.next()) {
-                is.add(resultSet.getInt(1));
-            }
-            resultSet.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getLocalizedMessage());
-        }
-        return is;*/
+        return new LinkedList<>(template.query(query,
+                (rs, rowNum) -> rs.getInt("id")));
     }
 
     public LinkedHashMap<String, Integer> getMapFromResultById(int id) throws Exception {
         LinkedHashMap<String, Integer> mc = null;
         String query = String.format("SELECT result FROM results where id='%d'", id);
+
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
