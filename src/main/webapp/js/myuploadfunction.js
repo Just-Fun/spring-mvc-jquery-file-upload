@@ -29,4 +29,9 @@ $(function () {
    		
 		dropZone: $('#dropzone')
     });
+
+    $('#test').click(function() {
+        $('#uploaded-files tr').slice(1).remove();
+    });
 });
+

@@ -19,12 +19,12 @@
 </head>
 
 <body>
-<h1>Spring MVC - jQuery File Upload</h1>
+<h3>Number of occurrences of the strings in files</h3>
 <div style="width:500px;padding:20px">
 
 	<input id="fileupload" type="file" accept=".txt" name="files[]" data-url="rest/controller/upload" multiple>
 	
-	<!--<div id="dropzone" class="fade well">Drop files here</div>-->
+	<div id="dropzone" class="fade well">Or drop files here</div>
 	
 	<div id="progress" class="progress">
     	<div class="bar" style="width: 0%;"></div>
@@ -38,6 +38,10 @@
 			<!--<th>Download</th>-->
 		</tr>
 	</table>
+
+    <div id="test" class="tset">
+        <div class="btn btn-default" role="button">Test</div>
+    </div>
 
 	<div id="getResult" class="getResult" style="display:none;">
 		<a href='rest/controller/getResult' class="btn btn-default" role="button">Get the result of the calculation</a>

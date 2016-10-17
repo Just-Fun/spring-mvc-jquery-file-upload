@@ -9,22 +9,24 @@
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <title>Message</title>
+
+        <title>Result</title>
     </head>
     <body>
 
-    <div id="toUpload" class="toUpload">
-      <a href="/spring-mvc-jquery-file-upload" class="btn btn-default" role="button">Upload new files</a>
-      </div>
+        <div class="container">
+            <div id="toUpload" class="toUpload">
+              <a href="/spring-mvc-jquery-file-upload" class="btn btn-default" role="button">Upload new files</a>
+            </div>
 
-        <dt>[</dt>
-        <c:forEach items="${map}" var="endty" varStatus="loop">
-            <dt> {</dt>
-            <dt>"value": "${endty.key}",</dt>
-            <dt>"count": ${endty.value} </dt>
-            <dt>}${!loop.last ? ',' : ''}</dt>
-        </c:forEach>
-        <dt>]</dt>
-
+            <dt>[</dt>
+            <c:forEach items="${map}" var="endty" varStatus="loop">
+                <dt> {</dt>
+                <dt>"value": "${endty.key}",</dt>
+                <dt>"count": ${endty.value} </dt>
+                <dt>}${!loop.last ? ',' : ''}</dt>
+            </c:forEach>
+            <dt>]</dt>
+        </div>
     </body>
 </html>
