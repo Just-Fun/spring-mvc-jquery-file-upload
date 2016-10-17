@@ -76,7 +76,7 @@ public class FileController {
             long size = mpf.getSize();
 
             manager = new PostgreSQLManager();// TODO bean
-            manager.insert(fileName, inputStream, sessionTime);
+            manager.insertFile(fileName, inputStream, sessionTime);
 
             String file = fileMeta.getFileName();
 

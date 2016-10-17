@@ -1,10 +1,21 @@
 package com.hmkcode.spring.mvc.model;
 
-import java.sql.Connection;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Serzh on 10/7/16.
  */
 public interface DatabaseManager {
-    void connect();
+
+    void insertFile(String fileName, InputStream inputStream, long session);
+
+    void insertResult(long session, Map<String, Integer> map);
+
+    InputStream selectFileById(int id);
+
+    LinkedHashMap<String, Integer> getMapFromResultById(int id) throws Exception;
+
+    LinkedHashMap<String, Integer> getMapFromResultBySession(long session) throws Exception;
 }

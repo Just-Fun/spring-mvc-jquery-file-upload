@@ -51,8 +51,7 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-    @Override
-    public void connect() {
+    private void connect() {
         closeOpenedConnection();
         getConnection();
     }
@@ -83,7 +82,8 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-    public void insert(String fileName, InputStream inputStream, long session) {
+    @Override
+    public void insertFile(String fileName, InputStream inputStream, long session) {
         String query = "INSERT INTO files (name, file, status, session) values (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 //            connection.setAutoCommit(false);
@@ -98,6 +98,7 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
+    @Override
     public void insertResult(long session, Map<String, Integer> map) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
@@ -115,6 +116,7 @@ public class PostgreSQLManager implements DatabaseManager {
         template.update(query, session, data);
     }
 
+    @Override
     public InputStream selectFileById(int id) {
         String query = String.format("SELECT file FROM files where id='%d'", id);
         return template.queryForObject(query,
@@ -127,6 +129,7 @@ public class PostgreSQLManager implements DatabaseManager {
                 (rs, rowNum) -> rs.getInt("id")));
     }
 
+    @Override
     public LinkedHashMap<String, Integer> getMapFromResultById(int id) throws Exception {
         LinkedHashMap<String, Integer> mc = null;
         String query = String.format("SELECT result FROM results where id='%d'", id);
@@ -147,6 +150,7 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
+    @Override
     public LinkedHashMap<String, Integer> getMapFromResultBySession(long session) throws Exception {
         LinkedHashMap<String, Integer> mc = null;
         String query = String.format("SELECT result FROM results where session='%d'", session);
