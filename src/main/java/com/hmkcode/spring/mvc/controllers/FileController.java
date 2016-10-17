@@ -43,7 +43,7 @@ public class FileController {
     @ResponseBody
     LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 
-        String sessionId = session.getId();
+//        String sessionId = session.getId();
 
         sessionTime = session.getCreationTime();
 
@@ -104,11 +104,11 @@ public class FileController {
         System.out.println("/getResult, sessionTime: " + sessionTime);
 //        String sessionId = session.getId();
 //        System.out.println("/getResult, session id: " + sessionId);
-
-        session.invalidate();
-        request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
-        if (!result.get(0).equals("There is now line to show.")) { // Temp... TODO
-            // if empty - go to main page
+        if (result.size() == 1 && result.containsKey("There is now line to show.")) { // Temp... TODO
+            response.sendRedirect("/spring-mvc-jquery-file-upload");
+        } else {
+            session.invalidate();
+            request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
             manager.insertResult(sessionTime, result);
         }
     }
