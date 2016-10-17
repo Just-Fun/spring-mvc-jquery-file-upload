@@ -6,14 +6,16 @@
 
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <title>Message</title>
     </head>
     <body>
 
-        <div id="toUpload" class="toUpload">
-            <a href="/spring-mvc-jquery-file-upload">Upload new files</a>
-        </div>
+    <div id="toUpload" class="toUpload">
+      <a href="/spring-mvc-jquery-file-upload" class="btn btn-default" role="button">Upload new files</a>
+      </div>
 
         <dt>[</dt>
         <c:forEach items="${map}" var="endty" varStatus="loop">
