@@ -27,7 +27,7 @@ public class Test {
     }
 
     private static Map<String, Integer> createMap() {
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new LinkedHashMap<>();
         String devd = "someString";
         int value = 1;
         for (int i = 0; i < 10000; i++) { // 10000 / 45 = 22 pages, 5 files 22 page each

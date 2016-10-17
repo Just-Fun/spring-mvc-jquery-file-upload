@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
-import com.hmkcode.spring.mvc.utils.MapToJson;
 import com.hmkcode.spring.mvc.utils.Service;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
