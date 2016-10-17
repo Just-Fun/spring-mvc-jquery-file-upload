@@ -98,18 +98,19 @@ public class FileController {
         Service service = new Service(); // TODO bean
 
         Map<String, Integer> result = service.run(sessionTime);
+
         request.setAttribute("map", result);
 
         System.out.println("/getResult, sessionTime: " + sessionTime);
 //        String sessionId = session.getId();
 //        System.out.println("/getResult, session id: " + sessionId);
 
-//        manager = new PostgreSQLManager();// TODO bean
-        manager.insertResult(sessionTime, result);
-
         session.invalidate();
         request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
-
+        if (!result.get(0).equals("There is now line to show.")) { // Temp... TODO
+            // if empty - go to main page
+            manager.insertResult(sessionTime, result);
+        }
     }
 
     /***************************************************
