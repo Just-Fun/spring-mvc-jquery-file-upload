@@ -120,8 +120,23 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
+//    @Override
+    public void insert(String tableName, Map<String, Object> columnData) {
+        StringJoiner tableNames = new StringJoiner(", ");
+        StringJoiner values = new StringJoiner("', '", "'", "'");
+        for (Map.Entry<String, Object> pair : columnData.entrySet()) {
+            tableNames.add(pair.getKey());
+            values.add(pair.getValue().toString());
+        }
+        template.update(String.format("INSERT INTO public.%s(%s) values (%s)",
+                tableName, tableNames.toString(), values.toString()));
+    }
+
+
     public InputStream selectFileById(int id) {
-        InputStream is = null;
+        return template.queryForObject(String.format("SELECT file FROM files where id='%d'", id),
+                (rs, rowNum) -> rs.getBinaryStream("file"));
+     /*   InputStream is = null;
         String query = String.format("SELECT file FROM files where id='%d'", id);
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             ResultSet resultSet = pst.executeQuery();
@@ -132,7 +147,12 @@ public class PostgreSQLManager implements DatabaseManager {
         } catch (SQLException e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
-        return is;
+        return is;*/
+    }
+
+//    @Override
+    public int getTableSize(String tableName) {
+        return template.queryForObject(String.format("SELECT COUNT(*) FROM public.%s", tableName), Integer.class);
     }
 
     public List<Integer> selectIdBySession(long session) {
