@@ -98,10 +98,45 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-    public void insertResult(long session, Map<String, Integer> map) {
+    /*jdbcTemplate.update(conn -> {
+     PreparedStatement ps = conn.prepareStatement( "INSERT INTO table (hstore_col, jsonb_col)" );
+     ps.setObject( 1, hstoreMap );
+     ps.setObject( 2, jsonbObj );
+});*/
 
+    /*// define query arguments
+48
+        Object[] params = new Object[] { name, surname, title, new Date() };
+
+        // define SQL types of the arguments
+51
+        int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.TIMESTAMP };
+
+        // execute insert query to insert the data
+54
+        // return number of row / rows processed by the executed query
+55
+        int row = template.update(insertSql, params, types);
+*/
+
+    public void insertResult(long session, Map<String, Integer> map) throws IOException {
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream output = new ObjectOutputStream(bos);
+        output.writeObject(map);
+
+        output.flush();
+        output.close();
+
+        byte[] data = bos.toByteArray();
+
+        Object[] params = new Object[] { session, data};
+        int[] types = new int[] { Types.BIGINT, Types.VARBINARY};
         String query = "INSERT INTO results (session,result) VALUES (?,?)";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
+        template.update(query, params, types);
+
+//        template.update(query, session, map);
+/*        try (PreparedStatement ps = connection.prepareStatement(query)) {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream output = new ObjectOutputStream(bos);
             output.writeObject(map);
@@ -117,7 +152,7 @@ public class PostgreSQLManager implements DatabaseManager {
             throw new RuntimeException(e.getLocalizedMessage());
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 //    @Override
