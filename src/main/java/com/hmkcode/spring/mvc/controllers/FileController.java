@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
+import com.hmkcode.spring.mvc.utils.MapToJson;
 import com.hmkcode.spring.mvc.utils.Service;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,9 +87,9 @@ public class FileController {
         }
 //        System.out.println("files in list: " + files.size());
 //        String fileName = files.get(0).getFileName();
-        for (FileMeta fileMeta : files) {
+        /*for (FileMeta fileMeta : files) { // TODO разобраться
             System.out.println(fileMeta.getFileName() + " : " + sessionTime);
-        }
+        }*/
 //        System.out.println(fileName + " : "+ sessionTime);
         return files;
     }
@@ -101,10 +102,15 @@ public class FileController {
         request.setAttribute("map", result);
 
         System.out.println("/getResult, sessionTime: " + sessionTime);
-        String sessionId = session.getId();
+//        String sessionId = session.getId();
 //        System.out.println("/getResult, session id: " + sessionId);
+
+//        manager = new PostgreSQLManager();// TODO bean
+        manager.insertResult2(sessionTime, result);
+
         session.invalidate();
         request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
+
     }
 
     /***************************************************
