@@ -12,12 +12,13 @@ public class Test2 {
 
     public static void main(String[] args) throws Exception {
         map = new LinkedHashMap<>();
-        createMap(map);
+//        createMap(map);
 
         PostgreSQLManager manager = new PostgreSQLManager();
-        manager.insertResult2(map);
+//        manager.insertResult2(1476703027769L, map);
 
-        LinkedHashMap<String, Integer> object = manager.getMapFromResult(10);
+//        LinkedHashMap<String, Integer> object = manager.getMapFromResultById(12);
+        LinkedHashMap<String, Integer> object = manager.getMapFromResultBySession(1476703027769L);
         object.forEach((k, v) -> System.out.println(k.toString() + " : " + v.toString()) );
     }
 
