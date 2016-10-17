@@ -31,7 +31,7 @@ public class PostgreSQLManager implements DatabaseManager {
     private static String password;
 
     private Connection connection;
-    private JdbcTemplate template; // TODO - use some there
+    private JdbcTemplate template;
 
     public PostgreSQLManager() {
         connect();
