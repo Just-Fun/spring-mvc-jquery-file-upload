@@ -15,7 +15,7 @@ public class Test2 {
 //        createMap(map);
 
         PostgreSQLManager manager = new PostgreSQLManager();
-//        manager.insertResult2(1476703027769L, map);
+//        manager.insertResult(1476703027769L, map);
 
 //        LinkedHashMap<String, Integer> object = manager.getMapFromResultById(12);
         LinkedHashMap<String, Integer> object = manager.getMapFromResultBySession(1476703027769L);

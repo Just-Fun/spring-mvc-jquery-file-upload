@@ -31,7 +31,7 @@ public class PostgreSQLManager implements DatabaseManager {
     private static String password;
 
     private Connection connection;
-    private JdbcTemplate template;
+    private JdbcTemplate template; // TODO - use some there
 
     public PostgreSQLManager() {
         connect();
@@ -83,13 +83,13 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-    public void insert(String fileName, InputStream inputStream, long size, long session) {
+    public void insert(String fileName, InputStream inputStream, long session) {
         String query = "INSERT INTO files (name, file, status, session) values (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 //            connection.setAutoCommit(false);
             pstmt.setString(1, fileName);
-            pstmt.setBinaryStream(2, inputStream/*, (int) size*/); //TODO check if size need
-            pstmt.setString(3, "upload");
+            pstmt.setBinaryStream(2, inputStream);
+            pstmt.setString(3, "upload"); // TODO if not use - delete
             pstmt.setLong(4, session);
             pstmt.executeUpdate();
 //            connection.commit();
@@ -98,19 +98,7 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-    /*public void insertResult(InputStream inputStream) {
-        String query = "INSERT INTO results (result) values (?)";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-//            connection.setAutoCommit(false);
-            pstmt.setBinaryStream(1, inputStream);
-            pstmt.executeUpdate();
-//            connection.commit();
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getLocalizedMessage());
-        }
-    }*/
-
-    public void insertResult2(long session, Map<String, Integer> map) {
+    public void insertResult(long session, Map<String, Integer> map) {
 
         String query = "INSERT INTO results (session,result) VALUES (?,?)";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -132,7 +120,7 @@ public class PostgreSQLManager implements DatabaseManager {
         }
     }
 
-    public InputStream selectFile(int id) {
+    public InputStream selectFileById(int id) {
         InputStream is = null;
         String query = String.format("SELECT file FROM files where id='%d'", id);
         try (PreparedStatement pst = connection.prepareStatement(query)) {
@@ -147,10 +135,12 @@ public class PostgreSQLManager implements DatabaseManager {
         return is;
     }
 
-    public List<Integer> selectIds(long session) {
-//        int[] ids = null;
-        List<Integer> is = new LinkedList<>();
-        String query = String.format("SELECT id FROM files where session='%d'", session);
+    public List<Integer> selectIdBySession(long session) {
+        return new LinkedList<>(template.query(String.format("SELECT id FROM files WHERE session='%d'", session),
+                (rs, rowNum) -> rs.getInt("id")
+        ));
+       /* List<Integer> is = new LinkedList<>();
+        String query = String.format("SELECT id FROM files WHERE session='%d'", session);
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             ResultSet resultSet = pst.executeQuery();
             while (resultSet.next()) {
@@ -160,23 +150,8 @@ public class PostgreSQLManager implements DatabaseManager {
         } catch (SQLException e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
-        return is;
+        return is;*/
     }
-
-   /* public InputStream selectResult(int id) {
-        InputStream is = null;
-        String query = String.format("SELECT result FROM results where id='%d'", id);
-        try (PreparedStatement pst = connection.prepareStatement(query)) {
-            ResultSet resultSet = pst.executeQuery();
-            while (resultSet.next()) {
-                is = resultSet.getBinaryStream(1);
-            }
-            resultSet.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getLocalizedMessage());
-        }
-        return is;
-    }*/
 
     public LinkedHashMap<String, Integer> getMapFromResultById(int id) throws Exception {
         LinkedHashMap<String, Integer> mc = null;

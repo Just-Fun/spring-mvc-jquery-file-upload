@@ -39,7 +39,7 @@ public class Service {
     }
 
     public Map<String, Integer> run(long session) {
-        List<Integer> filesId = manager.selectIds(session);
+        List<Integer> filesId = manager.selectIdBySession(session);
 
         selectFileById(filesId);
         System.out.println("After selectFileById");
@@ -74,7 +74,7 @@ public class Service {
     }
 
     private void filesLineToMap(Integer id) {
-        InputStream inputStream = manager.selectFile(id);
+        InputStream inputStream = manager.selectFileById(id);
         createMapFromLines(inputStream);
     }
 

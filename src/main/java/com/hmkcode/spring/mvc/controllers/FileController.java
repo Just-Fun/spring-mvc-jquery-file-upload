@@ -76,7 +76,7 @@ public class FileController {
             long size = mpf.getSize();
 
             manager = new PostgreSQLManager();// TODO bean
-            manager.insert(fileName, inputStream, size, sessionTime);
+            manager.insert(fileName, inputStream, sessionTime);
 
             String file = fileMeta.getFileName();
 
@@ -105,7 +105,7 @@ public class FileController {
 //        System.out.println("/getResult, session id: " + sessionId);
 
 //        manager = new PostgreSQLManager();// TODO bean
-        manager.insertResult2(sessionTime, result);
+        manager.insertResult(sessionTime, result);
 
         session.invalidate();
         request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
