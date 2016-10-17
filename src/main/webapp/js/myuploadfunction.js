@@ -12,8 +12,10 @@ $(function () {
                 		.append($('<td/>').text(file.fileName))
                 		.append($('<td/>').text(file.fileSize))
                 		.append($('<td/>').text(file.fileType))
+
 //                		.append($('<td/>').html("<a href='rest/controller/get/"+index+"'>Click</a>"))
                 		)//end $("#uploaded-files").append()
+                $("#getResult").show();
             });
         },
         
