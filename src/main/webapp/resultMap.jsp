@@ -10,18 +10,19 @@
         <title>Message</title>
     </head>
     <body>
-        [<br/>
-        <c:forEach items="${map}" var="entry" varStatus="loop">
-            { <br/>
-            "value": "${entry.key}", <br/>
-            "count": ${entry.value} <br/>
-             }
-             ${!loop.last ? ',' : ''}<br/>
-        </c:forEach>
-        ]</br>
-        </br>
+
         <div id="toUpload" class="toUpload">
             <a href="/spring-mvc-jquery-file-upload">Upload new files</a>
         </div>
+
+        <dt>[</dt>
+        <c:forEach items="${map}" var="endty" varStatus="loop">
+            <dt> {</dt>
+            <dt>"value": "${endty.key}",</dt>
+            <dt>"count": ${endty.value} </dt>
+            <dt>}${!loop.last ? ',' : ''}</dt>
+        </c:forEach>
+        <dt>]</dt>
+
     </body>
 </html>
