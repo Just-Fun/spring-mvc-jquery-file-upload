@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.hmkcode.spring.mvc.model.DatabaseManager;
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
 import com.hmkcode.spring.mvc.utils.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +27,9 @@ import com.hmkcode.spring.mvc.data.FileMeta;
 @Controller
 @RequestMapping("/controller")
 public class FileController {
+
+//    @Autowired
+//    DatabaseManager manager;
     PostgreSQLManager manager; // TODO bean
 
     LinkedList<FileMeta> files = new LinkedList<>();
@@ -43,8 +48,6 @@ public class FileController {
     @ResponseBody
     LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 
-//        String sessionId = session.getId();
-
         sessionTime = session.getCreationTime();
 
         Iterator<String> itr = request.getFileNames();
@@ -53,7 +56,7 @@ public class FileController {
 //        TODO if multiple upload(not one by one) write in DB right, but show in UA - wrong
         //2. get each file
         while (itr.hasNext()) {
-//            sessionTime = System.currentTimeMillis();
+
             //2.1 get next MultipartFile
             mpf = request.getFile(itr.next());
             String originalFilename = mpf.getOriginalFilename();
@@ -73,7 +76,6 @@ public class FileController {
 
             String fileName = mpf.getOriginalFilename();
             InputStream inputStream = mpf.getInputStream();
-            long size = mpf.getSize();
 
             manager = new PostgreSQLManager();// TODO bean
             manager.insertFile(fileName, inputStream, sessionTime);
@@ -102,8 +104,7 @@ public class FileController {
         request.setAttribute("map", result);
 
         System.out.println("/getResult, sessionTime: " + sessionTime);
-//        String sessionId = session.getId();
-//        System.out.println("/getResult, session id: " + sessionId);
+
         if (result.size() == 1 && result.containsKey("There is now line to show.")) { // Temp... TODO
             response.sendRedirect("/spring-mvc-jquery-file-upload");
         } else {

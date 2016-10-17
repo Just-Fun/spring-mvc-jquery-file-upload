@@ -1,7 +1,9 @@
 package com.hmkcode.spring.mvc.model;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.sql.*;
@@ -10,6 +12,8 @@ import java.util.*;
 /**
  * Created by Serzh on 10/7/16.
  */
+/*@Component("PostgreSQLManager")
+@Scope(value = "prototype")*/
 public class PostgreSQLManager implements DatabaseManager {
 
     static {
