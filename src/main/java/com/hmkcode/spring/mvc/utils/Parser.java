@@ -1,69 +1,38 @@
 package com.hmkcode.spring.mvc.utils;
 
-import com.hmkcode.spring.mvc.model.PostgreSQLManager;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by Serzh on 10/12/16.
+ * Created by Serzh on 10/18/16.
  */
-// TODO implement MapReduce
 public class Parser {
-    private List<Map<String, Integer>> maps;
+
+    private List<Map<String, Integer>> maps = new ArrayList<>();;
     private Map<String, Integer> result;
-    private PostgreSQLManager manager; // TODO bean
-    private ExecutorService executor;
 
-    public Parser() {
-        executor = Executors.newFixedThreadPool(3);
-        maps = new ArrayList<>();
-        manager = new PostgreSQLManager();
-    }
-
-    public Map<String, Integer> run(long session) {
-        List<Integer> filesId = manager.selectIdBySession(session);
-
-        selectFileById(filesId);
-        System.out.println("After selectFileById");
-
-        while (!executor.isTerminated()) {
-            // wait until executing completed
-        }
-        checkMaps();
-
-        return result;
-    }
-
-    private void selectFileById(List<Integer> filesId) {
-        for (Integer id : filesId) {
-            Runnable task = new FilesToMap(id);
-            executor.execute(task);
-        }
-        executor.shutdown();
-    }
-
-    private void createMapFromLines(InputStream is) {
+    public void createMapFromLines(InputStream is) {
         Map<String, Integer> map = new LinkedHashMap<>();
         String line;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             while ((line = br.readLine()) != null) {
                 if (!line.isEmpty()) {
-                    addLinesToMap(map, line);
+                    linesToMap(map, line);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mapAddToMaps(map);
+        addMapToMaps(map);
     }
 
-    private void addLinesToMap(Map<String, Integer> map, String line) {
+    private void linesToMap(Map<String, Integer> map, String line) {
         if (map.containsKey(line)) {
             map.put(line, map.get(line) + 1);
         } else {
@@ -71,17 +40,18 @@ public class Parser {
         }
     }
 
-    private synchronized void mapAddToMaps(Map<String, Integer> map) {
+    private synchronized void addMapToMaps(Map<String, Integer> map) {
         maps.add(map);
     }
 
-    private void checkMaps() {
+    public Map<String, Integer> checkMaps() {
         System.out.println("inside checkMaps(), maps.size(): " + maps.size());
         if (maps.size() > 1) {
             result = concatMaps(maps);
         } else {
             result = maps.get(0);
         }
+        return result;
     }
 
     //TODO optimization algorithm
@@ -105,19 +75,5 @@ public class Parser {
             }
         }
         return result;
-    }
-
-    private class FilesToMap implements Runnable {
-        private Integer id; // int?
-
-        private FilesToMap(Integer id) {
-            this.id = id;
-        }
-
-        @Override
-        public void run() {
-            InputStream inputStream = manager.selectFileById(id);
-            createMapFromLines(inputStream);
-        }
     }
 }

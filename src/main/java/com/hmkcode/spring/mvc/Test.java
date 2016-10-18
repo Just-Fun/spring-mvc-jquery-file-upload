@@ -1,7 +1,5 @@
 package com.hmkcode.spring.mvc;
 
-import com.hmkcode.spring.mvc.utils.Parser;
-
 import java.util.*;
 
 /**
@@ -14,11 +12,11 @@ public class Test {
         createMaps();
 
         long begin = System.currentTimeMillis();
-        Map<String, Integer> result = new Parser().concatMaps(maps);
+//        Map<String, Integer> result = new Service().concatMaps(maps);
         long end = System.currentTimeMillis();
 
         System.out.println("time: " + (end - begin));
-        System.out.println("size map: " + result.size());
+//        System.out.println("size map: " + result.size());
     }
 
     private static Map<String, Integer> createMap() {
