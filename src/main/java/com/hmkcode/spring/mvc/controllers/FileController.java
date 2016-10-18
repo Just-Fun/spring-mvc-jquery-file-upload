@@ -11,10 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.hmkcode.spring.mvc.model.DatabaseManager;
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
-import com.hmkcode.spring.mvc.utils.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hmkcode.spring.mvc.utils.Parser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,13 +26,14 @@ import com.hmkcode.spring.mvc.data.FileMeta;
 @RequestMapping("/controller")
 public class FileController {
 
-//    @Autowired
+    //    @Autowired
 //    DatabaseManager manager;
     PostgreSQLManager manager; // TODO bean
 
     LinkedList<FileMeta> files = new LinkedList<>();
     FileMeta fileMeta = null;
-    long sessionTime /*System.currentTimeMillis()*/;
+    long sessionTime = 0;/*System.currentTimeMillis()*/
+    ;
 
     /***************************************************
      * URL: /rest/controller/upload
@@ -97,17 +96,19 @@ public class FileController {
 
     @RequestMapping(value = "/getResult", method = RequestMethod.GET)
     public void getResult(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
-        Service service = new Service(); // TODO bean
 
-        Map<String, Integer> result = service.run(sessionTime);
-
-        request.setAttribute("map", result);
-
-        System.out.println("/getResult, sessionTime: " + sessionTime);
-
-        if (result.size() == 1 && result.containsKey("There is now line to show.")) { // Temp... TODO
+        if (sessionTime == 0) {
+            System.out.println("sessionTime == 0");
             response.sendRedirect("/spring-mvc-jquery-file-upload");
         } else {
+            Parser service = new Parser(); // TODO bean
+
+            Map<String, Integer> result = service.run(sessionTime);
+
+            request.setAttribute("map", result);
+
+            System.out.println("/getResult, sessionTime: " + sessionTime);
+
             session.invalidate();
             request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
             manager.insertResult(sessionTime, result);
