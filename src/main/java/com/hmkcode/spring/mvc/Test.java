@@ -1,6 +1,6 @@
 package com.hmkcode.spring.mvc;
 
-import com.hmkcode.spring.mvc.utils.Service;
+import com.hmkcode.spring.mvc.utils.Parser;
 
 import java.util.*;
 
@@ -14,7 +14,7 @@ public class Test {
         createMaps();
 
         long begin = System.currentTimeMillis();
-        Map<String, Integer> result = new Service().concatMaps(maps);
+        Map<String, Integer> result = new Parser().concatMaps(maps);
         long end = System.currentTimeMillis();
 
         System.out.println("time: " + (end - begin));

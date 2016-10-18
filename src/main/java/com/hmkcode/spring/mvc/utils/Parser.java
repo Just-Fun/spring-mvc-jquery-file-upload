@@ -14,14 +14,13 @@ import java.util.concurrent.Executors;
  * Created by Serzh on 10/12/16.
  */
 // TODO implement MapReduce
-public class Service {
+public class Parser {
     private List<Map<String, Integer>> maps;
-
     private Map<String, Integer> result;
     private PostgreSQLManager manager; // TODO bean
     private ExecutorService executor;
 
-    public Service() {
+    public Parser() {
         executor = Executors.newFixedThreadPool(3);
         maps = new ArrayList<>();
         manager = new PostgreSQLManager();
@@ -49,30 +48,34 @@ public class Service {
         executor.shutdown();
     }
 
-    private class FilesToMap implements Runnable {
-        private Integer id; // int?
-
-        private FilesToMap(Integer id) {
-            this.id = id;
+    private void createMapFromLines(InputStream is) {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        String line;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+            while ((line = br.readLine()) != null) {
+                if (!line.isEmpty()) {
+                    addLinesToMap(map, line);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        mapAddToMaps(map);
+    }
 
-        @Override
-        public void run() {
-            filesLineToMap(id);
+    private void addLinesToMap(Map<String, Integer> map, String line) {
+        if (map.containsKey(line)) {
+            map.put(line, map.get(line) + 1);
+        } else {
+            map.put(line, 1);
         }
     }
 
-    private void filesLineToMap(Integer id) {
-        InputStream inputStream = manager.selectFileById(id);
-        createMapFromLines(inputStream);
+    private synchronized void mapAddToMaps(Map<String, Integer> map) {
+        maps.add(map);
     }
 
     private void checkMaps() {
-        if (maps.size() == 0) {
-            Map<String, Integer> map = new LinkedHashMap<>();
-            map.put("There is now line to show.", null);
-            maps.add(map);
-        }
         System.out.println("inside checkMaps(), maps.size(): " + maps.size());
         if (maps.size() > 1) {
             result = concatMaps(maps);
@@ -81,15 +84,7 @@ public class Service {
         }
     }
 
-    private void addLinesToMap( Map<String, Integer> map, String line) {
-        if (map.containsKey(line)) {
-            map.put(line, map.get(line) + 1);
-        } else {
-            map.put(line, 1);
-        }
-    }
-
-    //TODO optimized algorithm
+    //TODO optimization algorithm
     public Map<String, Integer> concatMaps(List<Map<String, Integer>> maps) {
         Map<String, Integer> result = maps.get(0);
 
@@ -112,32 +107,17 @@ public class Service {
         return result;
     }
 
-    private void createMapFromLines(InputStream is) {
-        Map<String, Integer> map = new LinkedHashMap<>();
-        BufferedReader br = null;
-        String line;
-        try {
-            br = new BufferedReader(new InputStreamReader(is));
-            while ((line = br.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    addLinesToMap(map, line);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        mapAddToMaps(map);
-    }
+    private class FilesToMap implements Runnable {
+        private Integer id; // int?
 
-    private synchronized void mapAddToMaps( Map<String, Integer> map) {
-        maps.add(map);
-    } // надо ли?
+        private FilesToMap(Integer id) {
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+            InputStream inputStream = manager.selectFileById(id);
+            createMapFromLines(inputStream);
+        }
+    }
 }
