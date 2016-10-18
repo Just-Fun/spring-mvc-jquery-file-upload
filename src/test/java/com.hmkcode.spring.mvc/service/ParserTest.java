@@ -35,7 +35,7 @@ public class ParserTest {
     public void createMapFromOneFile() throws Exception {
         mapFromOneFile();
 
-        parser.createMapFromFile(getFile1(FILE1));
+        parser.createMapFromFile(getFile(FILE1));
         Map<String, Integer> result = parser.getResult();
 
         assertEquals(map, result);
@@ -45,8 +45,8 @@ public class ParserTest {
     public void createMapFromTwoFiles() throws Exception {
         mapFromTwoFiles();
 
-        parser.createMapFromFile(getFile1(FILE1));
-        parser.createMapFromFile(getFile1(FILE2));
+        parser.createMapFromFile(getFile(FILE1));
+        parser.createMapFromFile(getFile(FILE2));
         Map<String, Integer> result = parser.getResult();
 
         assertEquals(map, result);
@@ -56,14 +56,25 @@ public class ParserTest {
     public void createMapFromFourFile() throws Exception {
         mapFromFourFiles();
 
-        parser.createMapFromFile(getFile1(FILE1));
-        parser.createMapFromFile(getFile1(FILE2));
-        parser.createMapFromFile(getFile1(FILE3));
-        parser.createMapFromFile(getFile1(FILE4));
+        parser.createMapFromFile(getFile(FILE1));
+        parser.createMapFromFile(getFile(FILE2));
+        parser.createMapFromFile(getFile(FILE3));
+        parser.createMapFromFile(getFile(FILE4));
         Map<String, Integer> result = parser.getResult();
 
         assertEquals(map, result);
     }
+
+    @Test
+    public void createMapFromLotsOfFiles() throws Exception {
+        for (int i = 0; i < 100; i++) {
+            InputStream inputStream = getFile(FILE1);
+            parser.createMapFromFile(inputStream);
+        }
+        Map<String, Integer> result = parser.getResult();
+        assertEquals("{First File!!!=100, First row=100, Second row=100}", result.toString());
+    }
+
 
     private void mapFromOneFile() {
         map = new LinkedHashMap<>();
@@ -91,12 +102,8 @@ public class ParserTest {
         map.put("Fourth File!!!", 1);
         map.put("Fourth row", 1);
     }
-    @Test
-    public void getResultTest() throws Exception {
 
-    }
-
-    public InputStream getFile1(String path) {
+    public InputStream getFile(String path) {
         File initialFile = new File(path);
         InputStream targetStream = null;
         try {
