@@ -1,4 +1,4 @@
-package com.hmkcode.spring.mvc.utils;
+package com.hmkcode.spring.mvc.service;
 
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
 
