@@ -14,8 +14,12 @@ import java.util.Map;
  */
 public class Parser {
 
-    private List<Map<String, Integer>> maps = new ArrayList<>();;
+    private List<Map<String, Integer>> maps;
     private Map<String, Integer> result;
+
+    public Parser() {
+        maps = new ArrayList<>();;
+    }
 
     public void createMapFromLines(InputStream is) {
         Map<String, Integer> map = new LinkedHashMap<>();
@@ -55,7 +59,7 @@ public class Parser {
     }
 
     //TODO optimization algorithm
-    public Map<String, Integer> concatMaps(List<Map<String, Integer>> maps) {
+    private Map<String, Integer> concatMaps(List<Map<String, Integer>> maps) {
         Map<String, Integer> result = maps.get(0);
 
         for (int i = 1; i < maps.size(); i++) {
