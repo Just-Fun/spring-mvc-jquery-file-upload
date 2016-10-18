@@ -31,7 +31,7 @@ public class Service {
         while (!executor.isTerminated()) {
             // wait until executing completed
         }
-        return mapCreator.checkMaps();
+        return mapCreator.getResult();
     }
 
     private void selectFileById(List<Integer> filesId) {
@@ -52,7 +52,7 @@ public class Service {
         @Override
         public void run() {
             InputStream inputStream = manager.selectFileById(id);
-            mapCreator.createMapFromLines(inputStream);
+            mapCreator.createMapFromFile(inputStream);
         }
     }
 }

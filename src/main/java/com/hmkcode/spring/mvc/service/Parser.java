@@ -21,7 +21,7 @@ public class Parser {
         maps = new ArrayList<>();;
     }
 
-    public void createMapFromLines(InputStream is) {
+    public void createMapFromFile(InputStream is) {
         Map<String, Integer> map = new LinkedHashMap<>();
         String line;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
@@ -48,8 +48,8 @@ public class Parser {
         maps.add(map);
     }
 
-    public Map<String, Integer> checkMaps() {
-        System.out.println("inside checkMaps(), maps.size(): " + maps.size());
+    public Map<String, Integer> getResult() {
+//        System.out.println("inside getResult(), maps.size(): " + maps.size());
         if (maps.size() > 1) {
             result = concatMaps(maps);
         } else {
