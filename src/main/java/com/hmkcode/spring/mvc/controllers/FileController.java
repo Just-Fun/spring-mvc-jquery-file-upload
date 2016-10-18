@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.hmkcode.spring.mvc.model.DatabaseManager;
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
 import com.hmkcode.spring.mvc.service.Service;
 import org.springframework.stereotype.Controller;
@@ -27,13 +28,11 @@ import com.hmkcode.spring.mvc.data.FileMeta;
 public class FileController {
 
     //    @Autowired
-//    DatabaseManager manager;
-    PostgreSQLManager manager; // TODO bean
+    DatabaseManager manager;// TODO bean
 
     LinkedList<FileMeta> files = new LinkedList<>();
     FileMeta fileMeta = null;
-    long sessionTime = 0;/*System.currentTimeMillis()*/
-    ;
+    long sessionTime = 0;
 
     /***************************************************
      * URL: /rest/controller/upload

@@ -88,13 +88,13 @@ public class PostgreSQLManager implements DatabaseManager {
 
     @Override
     public void insertFile(String fileName, InputStream inputStream, long session) {
-        String query = "INSERT INTO files (name, file, status, session) values (?, ?, ?, ?)";
+        String query = "INSERT INTO files (name, file, /*status,*/ session) values (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 //            connection.setAutoCommit(false);
             pstmt.setString(1, fileName);
             pstmt.setBinaryStream(2, inputStream);
-            pstmt.setString(3, "upload"); // TODO if not use - delete
-            pstmt.setLong(4, session);
+//            pstmt.setString(3, "upload"); // TODO if not use - delete
+            pstmt.setLong(3, session);
             pstmt.executeUpdate();
 //            connection.commit();
         } catch (SQLException e) {
@@ -127,6 +127,7 @@ public class PostgreSQLManager implements DatabaseManager {
                 (rs, rowNum) -> rs.getBinaryStream("file"));
     }
 
+    @Override
     public List<Integer> selectIdBySession(long session) {
         String query = String.format("SELECT id FROM files WHERE session='%d'", session);
         return new LinkedList<>(template.query(query,
@@ -135,42 +136,33 @@ public class PostgreSQLManager implements DatabaseManager {
 
     @Override
     public LinkedHashMap<String, Integer> getMapFromResultById(int id) throws Exception {
-        LinkedHashMap<String, Integer> mc = null;
+        LinkedHashMap<String, Integer> result = null;
         String query = String.format("SELECT result FROM results where id='%d'", id);
 
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                try {
-                    ByteArrayInputStream bais = new ByteArrayInputStream(rs.getBytes(1));
-                    ObjectInputStream ins = new ObjectInputStream(bais);
-                    mc = (LinkedHashMap) ins.readObject();
-                    ins.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return mc;
-        }
+        return getMap(result, query);
     }
 
     @Override
     public LinkedHashMap<String, Integer> getMapFromResultBySession(long session) throws Exception {
-        LinkedHashMap<String, Integer> mc = null;
+        LinkedHashMap<String, Integer> result = null;
         String query = String.format("SELECT result FROM results where session='%d'", session);
+        return getMap(result, query);
+    }
+
+    private LinkedHashMap<String, Integer> getMap(LinkedHashMap<String, Integer> result, String query) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 try {
-                    ByteArrayInputStream bais = new ByteArrayInputStream(rs.getBytes(1));
-                    ObjectInputStream ins = new ObjectInputStream(bais);
-                    mc = (LinkedHashMap) ins.readObject();
+                    ByteArrayInputStream inputStream = new ByteArrayInputStream(rs.getBytes(1));
+                    ObjectInputStream ins = new ObjectInputStream(inputStream);
+                    result = (LinkedHashMap) ins.readObject();
                     ins.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            return mc;
+            return result;
         }
     }
 }

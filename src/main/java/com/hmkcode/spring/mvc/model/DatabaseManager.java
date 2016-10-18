@@ -2,6 +2,7 @@ package com.hmkcode.spring.mvc.model;
 
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +15,8 @@ public interface DatabaseManager {
     void insertResult(long session, Map<String, Integer> map);
 
     InputStream selectFileById(int id);
+
+    List<Integer> selectIdBySession(long session);
 
     LinkedHashMap<String, Integer> getMapFromResultById(int id) throws Exception;
 

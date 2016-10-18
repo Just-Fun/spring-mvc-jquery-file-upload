@@ -1,5 +1,6 @@
 package com.hmkcode.spring.mvc.service;
 
+import com.hmkcode.spring.mvc.model.DatabaseManager;
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
 
 import java.io.InputStream;
@@ -12,7 +13,7 @@ import java.util.concurrent.Executors;
  */
 // TODO implement MapReduce
 public class Service {
-    private PostgreSQLManager manager; // TODO bean
+    private DatabaseManager manager; // TODO bean
     private ExecutorService executor;
     private Parser mapCreator;
 
