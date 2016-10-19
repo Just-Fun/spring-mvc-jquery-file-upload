@@ -46,13 +46,23 @@ public class PostgreSQLManager implements DatabaseManager {
         Utils utils = new Utils();
         host = utils.getHost();
         port = utils.getPort();
-
         database = utils.getDatabase();
         userName = utils.getUserName();
         password = utils.getPassword();
     }
 
     private void connect() {
+        closeOpenedConnection();
+        getConnection();
+    }
+
+    @Override
+    public void connect(String database, String userName, String password) {
+        if (userName != null && password != null) {
+            this.userName = userName;
+            this.password = password;
+        }
+        this.database = database;
         closeOpenedConnection();
         getConnection();
     }
@@ -75,8 +85,8 @@ public class PostgreSQLManager implements DatabaseManager {
         if (connection != null) {
             try {
                 connection.close();
-                connection = null;
-                template = null;
+//                connection = null;
+//                template = null;
             } catch (SQLException e) {
                 throw new DatabaseManagerException(ERROR, e);
             }

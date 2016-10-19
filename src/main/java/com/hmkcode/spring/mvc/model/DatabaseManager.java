@@ -11,6 +11,8 @@ import java.util.Set;
  */
 public interface DatabaseManager {
 
+    void connect(String database, String userName, String password);
+
     void insertFile(String fileName, InputStream inputStream, long session);
 
     void insertResult(long session, Map<String, Integer> map);
