@@ -51,43 +51,43 @@ public class FileController {
 
         Iterator<String> itr = request.getFileNames();
 
-//        TODO if multiple upload(not one by one) write in DB right, but show in UA - wrong
         //2. get each file
-        while (itr.hasNext()) {
+        synchronized(this) { // TODO optimized
+            while (itr.hasNext()) {
 
-            //2.1 get next MultipartFile
-            mpf = request.getFile(itr.next());
+                //2.1 get next MultipartFile
+                mpf = request.getFile(itr.next());
 
-            //2.2 if files > 10 remove the first from the list
-            if (files.size() >= 10) {
-                files.pop();
-            }
-            String originalFilename = mpf.getOriginalFilename();
-            System.out.println("From mpf: " + originalFilename);
+                //2.2 if files > 10 remove the first from the list
+                if (files.size() >= 10) {
+                    files.pop();
+                }
+                String originalFilename = mpf.getOriginalFilename();
+                System.out.println("From mpf: " + originalFilename);
 
-            //2.3 create new fileMeta
-            fileMeta = new FileMeta();
-            fileMeta.setFileName(originalFilename);
-            String file = fileMeta.getFileName();
-            System.out.println("From fileMeta: " + file);
+                //2.3 create new fileMeta
+                fileMeta = new FileMeta();
+                fileMeta.setFileName(originalFilename);
+                String file = fileMeta.getFileName();
+                System.out.println("From fileMeta: " + file);
 
-            fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
-            fileMeta.setFileType(mpf.getContentType());
+                fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
+                fileMeta.setFileType(mpf.getContentType());
 //            fileMeta.setTimeCreated(sessionTime);
 
-            InputStream inputStream = mpf.getInputStream();
-            manager.insertFile(originalFilename, inputStream, sessionTime);
+                InputStream inputStream = mpf.getInputStream();
+                manager.insertFile(originalFilename, inputStream, sessionTime);
 
-
-            files.add(fileMeta);
-            System.out.println("files.add(fileMeta)" + file);
-//            System.out.println("sessionTime: " + sessionTime);
+                files.add(fileMeta);
+                System.out.println("files.add(fileMeta)" + fileMeta.getFileName());
+            }
         }
 //        System.out.println("files in list: " + files.size());
 //        String fileName = files.get(0).getFileName();
-        /*for (FileMeta fileMeta : files) { // TODO разобраться
-            System.out.println(fileMeta.getFileName() + " : " + sessionTime);
-        }*/
+        System.out.println("Foreach: ");
+        for (FileMeta fileMeta : files) { // TODO разобраться
+            System.out.println(fileMeta.getFileName());
+        }
 //        System.out.println(fileName + " : "+ sessionTime);
         return files;
     }
