@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Serzh on 10/7/16.
@@ -21,4 +22,16 @@ public interface DatabaseManager {
     LinkedHashMap<String, Integer> getMapFromResultById(int id) throws Exception;
 
     LinkedHashMap<String, Integer> getMapFromResultBySession(long session) throws Exception;
+
+    Set<String> getTableNames();
+
+    void createDatabase(String database);
+
+    void createTable(String query);
+
+    void dropDatabase(String database);
+
+    void dropTable(String table);
+
+    void clearDatabase(String tableName);
 }

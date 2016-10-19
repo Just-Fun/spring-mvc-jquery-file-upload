@@ -1,5 +1,6 @@
 package com.hmkcode.spring.mvc.model;
 
+import com.hmkcode.spring.mvc.utils.Utils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
@@ -42,17 +43,13 @@ public class PostgreSQLManager implements DatabaseManager {
     }
 
     private static void loadProperties() {
-        Properties property = new Properties();
-        try (FileInputStream fis = new FileInputStream(PROPERTIES_FILE)) {
-            property.load(fis);
-            host = property.getProperty("host");
-            port = property.getProperty("port");
-            database = property.getProperty("database");
-            userName = property.getProperty("userName");
-            password = property.getProperty("password");
-        } catch (IOException e) {
-            throw new RuntimeException("Some trouble with loading properties: " + e.getCause());
-        }
+        Utils utils = new Utils();
+        host = utils.getHost();
+        port = utils.getPort();
+
+        database = utils.getDatabase();
+        userName = utils.getUserName();
+        password = utils.getPassword();
     }
 
     private void connect() {
@@ -164,5 +161,38 @@ public class PostgreSQLManager implements DatabaseManager {
             }
             return result;
         }
+    }
+
+    @Override
+    public Set<String> getTableNames() {
+        return new LinkedHashSet<>(template.query("SELECT table_name FROM information_schema.tables " +
+                        "WHERE table_schema='public' AND table_type='BASE TABLE'",
+                (rs, rowNum) -> rs.getString("table_name")
+        ));
+    }
+
+    @Override
+    public void createDatabase(String database) {
+        template.execute(String.format("CREATE DATABASE %s", database));
+    }
+
+    @Override
+    public void createTable(String query) {
+        template.execute(String.format("CREATE TABLE IF NOT EXISTS %s", query));
+    }
+
+    @Override
+    public void dropDatabase(String database) {
+        template.execute(String.format("DROP DATABASE IF EXISTS %s", database));
+    }
+
+    @Override
+    public void dropTable(String table) {
+        template.execute(String.format("DROP TABLE IF EXISTS %s", table));
+    }
+
+    @Override
+    public void clearDatabase(String tableName) {
+        getTableNames().forEach(this::dropTable);
     }
 }
