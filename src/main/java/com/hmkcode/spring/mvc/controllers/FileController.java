@@ -42,14 +42,14 @@ public class FileController {
      * @return LinkedList<FileMeta> as json format
      ****************************************************/
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public
     @ResponseBody
-    LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+    public LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 
+        manager = new PostgreSQLManager();// TODO bean
         sessionTime = session.getCreationTime();
+        MultipartFile mpf;
 
         Iterator<String> itr = request.getFileNames();
-        MultipartFile mpf;
 
 //        TODO if multiple upload(not one by one) write in DB right, but show in UA - wrong
         //2. get each file
@@ -57,28 +57,27 @@ public class FileController {
 
             //2.1 get next MultipartFile
             mpf = request.getFile(itr.next());
-            String originalFilename = mpf.getOriginalFilename();
-            System.out.println(originalFilename + " uploaded!");
 
             //2.2 if files > 10 remove the first from the list
             if (files.size() >= 10) {
                 files.pop();
             }
+            String originalFilename = mpf.getOriginalFilename();
+            System.out.println("From mpf: " + originalFilename);
 
             //2.3 create new fileMeta
             fileMeta = new FileMeta();
-            fileMeta.setFileName(mpf.getOriginalFilename());
+            fileMeta.setFileName(originalFilename);
+            String file = fileMeta.getFileName();
+            System.out.println("From fileMeta: " + file);
+
             fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
             fileMeta.setFileType(mpf.getContentType());
 //            fileMeta.setTimeCreated(sessionTime);
 
-            String fileName = mpf.getOriginalFilename();
             InputStream inputStream = mpf.getInputStream();
+            manager.insertFile(originalFilename, inputStream, sessionTime);
 
-            manager = new PostgreSQLManager();// TODO bean
-            manager.insertFile(fileName, inputStream, sessionTime);
-
-            String file = fileMeta.getFileName();
 
             files.add(fileMeta);
             System.out.println("files.add(fileMeta)" + file);
@@ -111,6 +110,7 @@ public class FileController {
             session.invalidate();
             request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
             manager.insertResult(sessionTime, result);
+            files = new LinkedList<>();
         }
     }
 
