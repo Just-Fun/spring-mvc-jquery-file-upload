@@ -1,9 +1,9 @@
 $(function () {
+           // $('#uploaded-files tr').slice(1).remove();
     $('#fileupload').fileupload({
         dataType: 'json',
 
         done: function (e, data) {
-//            $('#uploaded-files tr').slice(1).remove();
         	$("tr:has(td)").remove();
             $.each(data.result, function (index, file) {
 
@@ -30,8 +30,9 @@ $(function () {
 		dropZone: $('#dropzone')
     });
 
-    $('#test').click(function() {
-        $('#uploaded-files tr').slice(1).remove();
-    });
+  /*  $('#test').click(function() {
+        // $('#uploaded-files tr').slice(1).remove();
+        $("tr:has(td)").remove();
+    });*/
 });
 
