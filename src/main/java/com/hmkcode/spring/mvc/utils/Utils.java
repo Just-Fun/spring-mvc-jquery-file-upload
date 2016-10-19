@@ -20,6 +20,8 @@ public class Utils {
     private String userName;
     private String password;
 
+    private String databaseForTests;
+
     public Utils() {
         loadProperties();
 
@@ -34,6 +36,7 @@ public class Utils {
             database = property.getProperty("database");
             userName = property.getProperty("userName");
             password = property.getProperty("password");
+            databaseForTests = property.getProperty("databaseForTests");
         } catch (IOException e) {
             throw new RuntimeException("Some trouble with loading properties: " + e.getCause());
         }
@@ -57,5 +60,9 @@ public class Utils {
 
     public  String getPassword() {
         return password;
+    }
+
+    public String getDatabaseForTests() {
+        return databaseForTests;
     }
 }

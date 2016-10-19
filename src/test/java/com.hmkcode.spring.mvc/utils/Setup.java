@@ -1,67 +1,51 @@
-/*
 package com.hmkcode.spring.mvc.utils;
 
-import ua.com.juja.serzh.sqlcmd.dao.databaseManager.DatabaseManager;
+import com.hmkcode.spring.mvc.model.DatabaseManager;
+import com.hmkcode.spring.mvc.model.PostgreSQLManager;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 public class Setup {
     private final static String PROPERTIES_FILE = "src/test/resources/test-config.properties";
 
-    private String database;
-    private String user;
-    private String password;
+    private static String userName;
+    private static String password;
+    private static String databaseForTests;
 
-    public Setup() {
+    DatabaseManager manager;
+
+    public void createData() {
+        manager = new PostgreSQLManager();
         loadProperties();
+        setupData();
     }
 
     private void loadProperties() {
-        Properties property = new Properties();
-        try (FileInputStream fis = new FileInputStream(PROPERTIES_FILE)) {
-            property.load(fis);
-            database = property.getProperty("database");
-            user = property.getProperty("user");
-            password = property.getProperty("password");
-        } catch (IOException e) {
-            throw new RuntimeException("Properties do not loaded. " + e.getCause());
-        }
+        Utils utils = new Utils();
+        databaseForTests = utils.getDatabaseForTests();
+        userName = utils.getUserName();
+        password = utils.getPassword();
     }
 
-    public String getDatabase() {
-        return database;
-    }
+    public void setupData() {
 
-    public String getUser() {
-        return user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setupData(DatabaseManager manager, String database) {
-        this.database = database;
-        try {
-            manager.connect("", user, password);
+       /* try {
+            manager.connect();
         } catch (RuntimeException e) {
             throw new RuntimeException("For testing, change the name and password in a file 'test-config.properties'."
                     + "\n" + e.getCause());
-        }
-        manager.dropDatabase(database);
-        manager.createDatabase(database);
-        manager.connect(database, user, password);
+        }*/
+        manager.dropDatabase(databaseForTests);
+        manager.createDatabase(databaseForTests);
+        manager.connect(databaseForTests, userName, password);
         createTablesWithData(manager);
     }
 
     public void dropData(DatabaseManager manager) {
         try {
-            manager.connect("", user, password);
-            manager.dropDatabase(database);
+            manager.connect("", userName, password);
+//            manager.dropDatabase(databaseForTests);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -71,12 +55,5 @@ public class Setup {
         manager.createTable("users (name VARCHAR (50) UNIQUE NOT NULL, password VARCHAR (50) NOT NULL, id SERIAL PRIMARY KEY)");
         manager.createTable("test1 (id SERIAL PRIMARY KEY)");
         manager.createTable("users2 (id SERIAL NOT NULL PRIMARY KEY,username varchar(225) NOT NULL UNIQUE, password varchar(225))");
-
-        Map<String, Object> dataSet = new LinkedHashMap<>();
-        dataSet.put("name", "Vasia");
-        dataSet.put("password", "****");
-        dataSet.put("id", "22");
-        manager.insert("users", dataSet);
     }
 }
-*/
