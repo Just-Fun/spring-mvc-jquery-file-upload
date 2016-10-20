@@ -15,12 +15,12 @@ import java.util.concurrent.Executors;
 public class Service {
     private DatabaseManager manager; // TODO bean
     private ExecutorService executor;
-    private Parser mapCreator;
+    private Parser parser;
 
     public Service() {
         executor = Executors.newFixedThreadPool(3);
         manager = new PostgreSQLManager();
-        mapCreator = new Parser();
+        parser = new Parser();
     }
 
     public Map<String, Integer> run(long session) {
@@ -32,7 +32,7 @@ public class Service {
         while (!executor.isTerminated()) {
             // wait until executing completed
         }
-        return mapCreator.getResult();
+        return parser.getResult();
     }
 
     private void selectFileById(List<Integer> filesId) {
@@ -53,7 +53,7 @@ public class Service {
         @Override
         public void run() {
             InputStream inputStream = manager.selectFileById(id);
-            mapCreator.createMapFromFile(inputStream);
+            parser.createMapFromFile(inputStream);
         }
     }
 }

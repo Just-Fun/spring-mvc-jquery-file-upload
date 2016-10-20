@@ -55,7 +55,7 @@ public class Parser {
         } else {
             result = maps.get(0);
         }
-        return result;
+        return SortByValue.sortByValue(result);
     }
 
     //TODO optimization algorithm
