@@ -49,7 +49,6 @@ public class Parser {
     }
 
     public Map<String, Integer> getResult() {
-//        System.out.println("inside getResult(), maps.size(): " + maps.size());
         if (maps.size() > 1) {
             result = concatMaps(maps);
         } else {

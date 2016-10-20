@@ -44,7 +44,7 @@ public class Service {
     }
 
     private class FilesToMap implements Runnable {
-        private Integer id; // int?
+        private Integer id; //TODO int?
 
         private FilesToMap(Integer id) {
             this.id = id;
