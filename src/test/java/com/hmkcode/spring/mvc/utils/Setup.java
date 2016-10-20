@@ -2,7 +2,6 @@ package com.hmkcode.spring.mvc.utils;
 
 import com.hmkcode.spring.mvc.model.DatabaseManager;
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
-import com.hmkcode.spring.mvc.utils.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +15,6 @@ public class Setup {
     private final String FILE1 = "src/test/resources/file1.txt";
     private final String FILE2 = "src/test/resources/file2.txt";
     private final String FILE3 = "src/test/resources/file3.txt";
-    private final String FILE4 = "src/test/resources/file4.txt";
 
     long sesson1 = 1476954435111L;
     long sesson2 = 1476954435222L;

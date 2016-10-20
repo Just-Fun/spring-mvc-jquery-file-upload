@@ -27,35 +27,29 @@ import com.hmkcode.spring.mvc.data.FileMeta;
 @RequestMapping("/controller")
 public class FileController {
 
-    DatabaseManager manager;
+    DatabaseManager manager = new PostgreSQLManager();;
     Service service;
 
+    LinkedList<FileMeta> files = new LinkedList<>();
     FileMeta fileMeta = null;
     long sessionTime = 0;
-    LinkedList<FileMeta> files = new LinkedList<>();
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
     public LinkedList<FileMeta> upload(MultipartHttpServletRequest request, /*HttpServletResponse response, */HttpSession session) throws IOException {
 
-        manager = new PostgreSQLManager();
         sessionTime = session.getCreationTime();
         MultipartFile mpf;
 
         Iterator<String> itr = request.getFileNames();
 
-        //2. get each file
         while (itr.hasNext()) {
             synchronized (this) {
-                //2.1 get next MultipartFile
                 mpf = request.getFile(itr.next());
-
                 String originalFilename = mpf.getOriginalFilename();
 
-                //2.3 create new fileMeta
                 fileMeta = new FileMeta();
                 fileMeta.setFileName(originalFilename);
-
                 fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
                 fileMeta.setFileType(mpf.getContentType());
 
@@ -75,16 +69,14 @@ public class FileController {
             response.sendRedirect("/spring-mvc-jquery-file-upload");
         } else {
             service = new Service(manager);
-
             Map<String, Integer> result = service.run(sessionTime);
-
             request.setAttribute("map", result);
 
-            session.invalidate();
             request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
 
-            manager.insertResult(sessionTime, result);
+            session.invalidate();
             files = new LinkedList<>();
+            manager.insertResult(sessionTime, result);
         }
     }
 }
