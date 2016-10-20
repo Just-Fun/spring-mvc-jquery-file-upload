@@ -25,15 +25,9 @@ public interface DatabaseManager {
 
     LinkedHashMap<String, Integer> getMapFromResultBySession(long session) throws Exception;
 
-    Set<String> getTableNames();
-
     void createDatabase(String database);
 
     void createTable(String query);
 
     void dropDatabase(String database);
-
-    void dropTable(String table);
-
-    void clearDatabase(String tableName);
 }

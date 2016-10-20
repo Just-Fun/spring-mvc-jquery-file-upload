@@ -27,7 +27,6 @@ public class PostgreSQLManager implements DatabaseManager {
     }
 
     private static final String ERROR = "It is impossible because: ";
-    private static final String PROPERTIES_FILE = "src/main/resources/config.properties";
     private static String host;
     private static String port;
 
@@ -39,6 +38,7 @@ public class PostgreSQLManager implements DatabaseManager {
     private JdbcTemplate template;
 
     public PostgreSQLManager() {
+//        loadProperties();
         connect();
     }
 
@@ -95,12 +95,11 @@ public class PostgreSQLManager implements DatabaseManager {
 
     @Override
     public void insertFile(String fileName, InputStream inputStream, long session) {
-        String query = "INSERT INTO files (name, file, /*status,*/ session) values (?, ?, ?)";
+        String query = "INSERT INTO files (name, file, session) values (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 //            connection.setAutoCommit(false);
             pstmt.setString(1, fileName);
             pstmt.setBinaryStream(2, inputStream);
-//            pstmt.setString(3, "upload"); // TODO if not use - delete
             pstmt.setLong(3, session);
             pstmt.executeUpdate();
 //            connection.commit();
@@ -119,7 +118,7 @@ public class PostgreSQLManager implements DatabaseManager {
             output.flush();
             output.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO all printStackTrace change with...
         }
         byte[] data = bos.toByteArray();
 
@@ -174,14 +173,6 @@ public class PostgreSQLManager implements DatabaseManager {
     }
 
     @Override
-    public Set<String> getTableNames() {
-        return new LinkedHashSet<>(template.query("SELECT table_name FROM information_schema.tables " +
-                        "WHERE table_schema='public' AND table_type='BASE TABLE'",
-                (rs, rowNum) -> rs.getString("table_name")
-        ));
-    }
-
-    @Override
     public void createDatabase(String database) {
         template.execute(String.format("CREATE DATABASE %s", database));
     }
@@ -194,15 +185,5 @@ public class PostgreSQLManager implements DatabaseManager {
     @Override
     public void dropDatabase(String database) {
         template.execute(String.format("DROP DATABASE IF EXISTS %s", database));
-    }
-
-    @Override
-    public void dropTable(String table) {
-        template.execute(String.format("DROP TABLE IF EXISTS %s", table));
-    }
-
-    @Override
-    public void clearDatabase(String tableName) {
-        getTableNames().forEach(this::dropTable);
     }
 }
