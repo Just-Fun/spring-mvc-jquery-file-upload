@@ -29,8 +29,9 @@ public class FileController {
 
     //    @Autowired
     DatabaseManager manager;// TODO bean
+    Service service;
 
-    LinkedList<FileMeta> files = new LinkedList<>();
+    LinkedList<FileMeta> files/* = new LinkedList<>();*/;
     FileMeta fileMeta = null;
     long sessionTime = 0;
 
@@ -46,6 +47,7 @@ public class FileController {
     public LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 
         manager = new PostgreSQLManager();// TODO bean
+        files = new LinkedList<>();
         sessionTime = session.getCreationTime();
         MultipartFile mpf;
 
@@ -99,7 +101,7 @@ public class FileController {
             System.out.println("sessionTime == 0");
             response.sendRedirect("/spring-mvc-jquery-file-upload");
         } else {
-            Service service = new Service(); // TODO bean
+            service = new Service(); // TODO bean
 
             Map<String, Integer> result = service.run(sessionTime);
 
@@ -110,7 +112,6 @@ public class FileController {
             session.invalidate();
             request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
             manager.insertResult(sessionTime, result);
-            files = new LinkedList<>();
         }
     }
 
