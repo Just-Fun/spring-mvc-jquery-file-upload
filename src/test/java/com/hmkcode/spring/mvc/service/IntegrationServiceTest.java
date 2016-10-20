@@ -1,11 +1,9 @@
 package com.hmkcode.spring.mvc.service;
 
 import com.hmkcode.spring.mvc.model.DatabaseManager;
-import com.hmkcode.spring.mvc.service.Service;
 import com.hmkcode.spring.mvc.utils.Setup;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
