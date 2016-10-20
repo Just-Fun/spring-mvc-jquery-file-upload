@@ -12,6 +12,7 @@ import java.util.Map;
 /**
  * Created by Serzh on 10/18/16.
  */
+// TODO optimization algorithm (implement MapReduce)
 public class Parser {
 
     private List<Map<String, Integer>> maps;
@@ -57,7 +58,6 @@ public class Parser {
         return SortByValue.sortByValue(result);
     }
 
-    //TODO optimization algorithm
     private Map<String, Integer> concatMaps(List<Map<String, Integer>> maps) {
         Map<String, Integer> result = maps.get(0);
 

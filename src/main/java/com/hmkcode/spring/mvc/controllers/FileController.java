@@ -27,70 +27,44 @@ import com.hmkcode.spring.mvc.data.FileMeta;
 @RequestMapping("/controller")
 public class FileController {
 
-    //    @Autowired
-    DatabaseManager manager;// TODO bean
+    DatabaseManager manager;
     Service service;
 
-    LinkedList<FileMeta> files/* = new LinkedList<>();*/;
     FileMeta fileMeta = null;
     long sessionTime = 0;
+    LinkedList<FileMeta> files = new LinkedList<>();
 
-    /***************************************************
-     * URL: /rest/controller/upload
-     * upload(): receives files
-     * @param request : MultipartHttpServletRequest auto passed
-     * @param response : HttpServletResponse auto passed
-     * @return LinkedList<FileMeta> as json format
-     ****************************************************/
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+    public LinkedList<FileMeta> upload(MultipartHttpServletRequest request, /*HttpServletResponse response, */HttpSession session) throws IOException {
 
-        manager = new PostgreSQLManager();// TODO bean
-        files = new LinkedList<>();
+        manager = new PostgreSQLManager();
         sessionTime = session.getCreationTime();
         MultipartFile mpf;
 
         Iterator<String> itr = request.getFileNames();
 
         //2. get each file
-        synchronized(this) { // TODO optimized
-            while (itr.hasNext()) {
-
+        while (itr.hasNext()) {
+            synchronized (this) {
                 //2.1 get next MultipartFile
                 mpf = request.getFile(itr.next());
 
-                //2.2 if files > 10 remove the first from the list
-                if (files.size() >= 10) {
-                    files.pop();
-                }
                 String originalFilename = mpf.getOriginalFilename();
-                System.out.println("From mpf: " + originalFilename);
 
                 //2.3 create new fileMeta
                 fileMeta = new FileMeta();
                 fileMeta.setFileName(originalFilename);
-                String file = fileMeta.getFileName();
-                System.out.println("From fileMeta: " + file);
 
                 fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
                 fileMeta.setFileType(mpf.getContentType());
-//            fileMeta.setTimeCreated(sessionTime);
 
                 InputStream inputStream = mpf.getInputStream();
                 manager.insertFile(originalFilename, inputStream, sessionTime);
 
                 files.add(fileMeta);
-                System.out.println("files.add(fileMeta)" + fileMeta.getFileName());
             }
         }
-//        System.out.println("files in list: " + files.size());
-//        String fileName = files.get(0).getFileName();
-        System.out.println("Foreach: ");
-        for (FileMeta fileMeta : files) { // TODO разобраться
-            System.out.println(fileMeta.getFileName());
-        }
-//        System.out.println(fileName + " : "+ sessionTime);
         return files;
     }
 
@@ -98,42 +72,19 @@ public class FileController {
     public void getResult(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
 
         if (sessionTime == 0) {
-            System.out.println("sessionTime == 0");
             response.sendRedirect("/spring-mvc-jquery-file-upload");
         } else {
-            service = new Service(manager); // TODO bean
+            service = new Service(manager);
 
             Map<String, Integer> result = service.run(sessionTime);
 
             request.setAttribute("map", result);
 
-            System.out.println("/getResult, sessionTime: " + sessionTime);
-
             session.invalidate();
             request.getRequestDispatcher("/resultMap.jsp").forward(request, response);
+
             manager.insertResult(sessionTime, result);
+            files = new LinkedList<>();
         }
     }
-
-    /***************************************************
-     * URL: /rest/controller/get/{value}
-     * get(): get file as an attachment
-     * @param response : passed by the server
-     * @param value : value from the URL
-     * @return void
-     ****************************************************/
-   /* @RequestMapping(value = "/get/{value}", method = RequestMethod.GET)
-    public void get(HttpServletResponse response, @PathVariable String value) {
-        FileMeta getFile = files.get(Integer.parseInt(value));
-        try {
-            response.setContentType(getFile.getFileType());
-            response.setHeader("Content-disposition", "attachment; filename=\"" + getFile.getFileName() + "\"");
-            FileCopyUtils.copy(getFile.getBytes(), response.getOutputStream());
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }*/
-
 }

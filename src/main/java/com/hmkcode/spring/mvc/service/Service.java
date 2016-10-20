@@ -1,7 +1,6 @@
 package com.hmkcode.spring.mvc.service;
 
 import com.hmkcode.spring.mvc.model.DatabaseManager;
-import com.hmkcode.spring.mvc.model.PostgreSQLManager;
 
 import java.io.InputStream;
 import java.util.*;
@@ -11,24 +10,21 @@ import java.util.concurrent.Executors;
 /**
  * Created by Serzh on 10/12/16.
  */
-// TODO implement MapReduce
 public class Service {
-    private DatabaseManager manager; // TODO bean
+    private DatabaseManager manager;
     private ExecutorService executor;
     private Parser parser;
 
     public Service(DatabaseManager manager) {
         this.manager = manager;
         executor = Executors.newFixedThreadPool(3);
-//        manager = new PostgreSQLManager();
         parser = new Parser();
     }
 
     public Map<String, Integer> run(long session) {
         List<Integer> filesId = manager.selectIdBySession(session);
 
-        selectFileById(filesId);
-        System.out.println("After selectFileById");
+        selectFilesFromSession(filesId);
 
         while (!executor.isTerminated()) {
             // wait until executing completed
@@ -36,7 +32,7 @@ public class Service {
         return parser.getResult();
     }
 
-    private void selectFileById(List<Integer> filesId) {
+    private void selectFilesFromSession(List<Integer> filesId) {
         for (Integer id : filesId) {
             Runnable task = new FilesToMap(id);
             executor.execute(task);
@@ -45,9 +41,9 @@ public class Service {
     }
 
     private class FilesToMap implements Runnable {
-        private Integer id; //TODO int?
+        private int id;
 
-        private FilesToMap(Integer id) {
+        private FilesToMap(int id) {
             this.id = id;
         }
 

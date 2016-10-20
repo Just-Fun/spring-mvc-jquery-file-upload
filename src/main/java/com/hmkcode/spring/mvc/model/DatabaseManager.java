@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by Serzh on 10/7/16.
+ * Created by Serzh on 10/18/16.
  */
 public interface DatabaseManager {
 

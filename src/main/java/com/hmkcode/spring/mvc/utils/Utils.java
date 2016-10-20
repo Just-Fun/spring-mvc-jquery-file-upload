@@ -1,10 +1,8 @@
 package com.hmkcode.spring.mvc.utils;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.Properties;
 
 /**
@@ -24,7 +22,6 @@ public class Utils {
 
     public Utils() {
         loadProperties();
-
     }
 
     private void loadProperties() {

@@ -1,7 +1,7 @@
 package com.hmkcode.spring.mvc.model;
 
 /**
- * Created by serzh on 31.05.16.
+ * Created by Serzh on 10/18/16.
  */
 public class DatabaseManagerException extends RuntimeException {
 
