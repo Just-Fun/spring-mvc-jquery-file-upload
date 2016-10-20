@@ -8,7 +8,6 @@ public class FileMeta {
     private String fileName;
     private String fileSize;
     private String fileType;
-//    private long timeCreated;
 
     private byte[] bytes;
 
@@ -43,12 +42,4 @@ public class FileMeta {
     public void setBytes(byte[] bytes) {
         this.bytes = bytes;
     }
-
-   /* public long getTimeCreated() {
-        return timeCreated;
-    }
-
-    public void setTimeCreated(long timeCreated) {
-        this.timeCreated = timeCreated;
-    }*/
 }

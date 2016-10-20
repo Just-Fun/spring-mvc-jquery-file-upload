@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Setup {
     private final static String PROPERTIES_FILE = "src/test/resources/test-config.properties";
@@ -21,13 +23,16 @@ public class Setup {
     private static String userName;
     private static String password;
     private static String databaseForTests;
+    private static String database;
 
-    DatabaseManager manager;
+    static DatabaseManager manager;
+    private Map<String, Integer> map;
 
-    public void createData() {
+    public DatabaseManager createData() {
         manager = new PostgreSQLManager();
         loadProperties();
         setupData();
+        return manager;
     }
 
     private void loadProperties() {
@@ -35,10 +40,10 @@ public class Setup {
         databaseForTests = utils.getDatabaseForTests();
         userName = utils.getUserName();
         password = utils.getPassword();
+        database = utils.getDatabase();
     }
 
     public void setupData() {
-
         manager.dropDatabase(databaseForTests);
         manager.createDatabase(databaseForTests);
         manager.connect(databaseForTests, userName, password);
@@ -47,8 +52,8 @@ public class Setup {
 
     public void dropData() {
         try {
-            manager.connect("", userName, password);
-//            manager.dropDatabase(databaseForTests);
+            manager.connect(database, userName, password);
+            manager.dropDatabase(databaseForTests);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -65,9 +70,19 @@ public class Setup {
         InputStream inputStream1 = getFile(FILE1);
         manager.insertFile("file1.txt", inputStream1, sesson1);
         InputStream inputStream2 = getFile(FILE2);
-        manager.insertFile("file1.txt", inputStream2, sesson2);
+        manager.insertFile("file2.txt", inputStream2, sesson2);
         InputStream inputStream3 = getFile(FILE3);
-        manager.insertFile("file1.txt", inputStream3, sesson2);
+        manager.insertFile("file3.txt", inputStream3, sesson2);
+
+        manager.insertResult(sesson1, mapFromFirtsFile());
+    }
+
+    private Map<String, Integer> mapFromFirtsFile() {
+        map = new LinkedHashMap<>();
+        map.put("First File!!!", 1);
+        map.put("First row", 1);
+        map.put("Second row", 1);
+        return map;
     }
 
 
