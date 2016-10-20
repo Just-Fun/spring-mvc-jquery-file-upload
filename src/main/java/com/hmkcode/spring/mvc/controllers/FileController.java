@@ -101,7 +101,7 @@ public class FileController {
             System.out.println("sessionTime == 0");
             response.sendRedirect("/spring-mvc-jquery-file-upload");
         } else {
-            service = new Service(); // TODO bean
+            service = new Service(manager); // TODO bean
 
             Map<String, Integer> result = service.run(sessionTime);
 

@@ -17,9 +17,10 @@ public class Service {
     private ExecutorService executor;
     private Parser parser;
 
-    public Service() {
+    public Service(DatabaseManager manager) {
+        this.manager = manager;
         executor = Executors.newFixedThreadPool(3);
-        manager = new PostgreSQLManager();
+//        manager = new PostgreSQLManager();
         parser = new Parser();
     }
 
