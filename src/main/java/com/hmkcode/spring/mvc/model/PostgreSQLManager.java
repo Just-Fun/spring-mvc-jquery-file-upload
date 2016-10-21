@@ -34,7 +34,6 @@ public class PostgreSQLManager implements DatabaseManager {
     private JdbcTemplate template;
 
     public PostgreSQLManager() {
-//        loadProperties();
         connect();
     }
 
