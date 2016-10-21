@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import com.hmkcode.spring.mvc.model.DatabaseManager;
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
 import com.hmkcode.spring.mvc.service.Service;
+import com.hmkcode.spring.mvc.service.ServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -68,7 +69,7 @@ public class FileController {
         if (sessionTime == 0) {
             response.sendRedirect("/spring-mvc-jquery-file-upload");
         } else {
-            service = new Service(manager);
+            service = new ServiceImpl(manager);
             Map<String, Integer> result = service.run(sessionTime);
             request.setAttribute("map", result);
 

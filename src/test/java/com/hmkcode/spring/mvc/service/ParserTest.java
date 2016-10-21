@@ -28,7 +28,7 @@ public class ParserTest {
 
     @Before
     public  void setup() {
-        parser = new Parser();
+        parser = new ParserFirst();
     }
 
     @Test

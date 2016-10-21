@@ -32,7 +32,7 @@ public class IntegrationServiceTest {
 
     @Test
     public void testServiceOneFile() throws Exception {
-        service = new Service(manager);
+        service = new ServiceImpl(manager);
         Map<String, Integer> result = service.run(setup.getSesson1());
 
         assertEquals("{First File!!!=1, First row=1, Second row=1}", result.toString());
@@ -40,7 +40,7 @@ public class IntegrationServiceTest {
 
     @Test
     public void testServiceTwoFiles() throws Exception {
-        service = new Service(manager);
+        service = new ServiceImpl(manager);
         Map<String, Integer> result = service.run(setup.getSesson2());
         Map<String, Integer> map = new TreeMap<>(result);
 
