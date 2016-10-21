@@ -84,7 +84,7 @@ public class PostgreSQLManager implements DatabaseManager {
 //                connection = null;
 //                template = null;
             } catch (SQLException e) {
-                throw new DatabaseManagerException(ERROR, e);
+                throw new DatabaseManagerException("Can't close connection: ", e);
             }
         }
     }
@@ -100,7 +100,7 @@ public class PostgreSQLManager implements DatabaseManager {
             pstmt.executeUpdate();
 //            connection.commit();
         } catch (SQLException e) {
-            throw new RuntimeException(e.getLocalizedMessage());
+            throw new DatabaseManagerException("Trouble with 'insertFile()'", e);
         }
     }
 
@@ -114,7 +114,7 @@ public class PostgreSQLManager implements DatabaseManager {
             output.flush();
             output.close();
         } catch (IOException e) {
-            e.printStackTrace(); // TODO all printStackTrace change with...
+            throw new DatabaseManagerException("Trouble with 'insertResult()'", e);
         }
         byte[] data = bos.toByteArray();
 
@@ -161,7 +161,7 @@ public class PostgreSQLManager implements DatabaseManager {
                     result = (LinkedHashMap) ins.readObject();
                     ins.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new DatabaseManagerException("Trouble with 'getMap()'", e);
                 }
             }
             return result;
