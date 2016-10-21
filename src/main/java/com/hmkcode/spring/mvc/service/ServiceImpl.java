@@ -18,7 +18,7 @@ public class ServiceImpl implements Service {
     public ServiceImpl(DatabaseManager manager) {
         this.manager = manager;
         executor = Executors.newFixedThreadPool(3);
-        parser = new ParserFirst();
+        parser = new ParserImpl();
     }
 
     @Override

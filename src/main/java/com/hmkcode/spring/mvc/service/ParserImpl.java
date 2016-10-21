@@ -13,13 +13,13 @@ import java.util.Map;
  * Created by Serzh on 10/18/16.
  */
 // TODO optimization algorithm (implement MapReduce)
-public class ParserFirst implements Parser {
+public class ParserImpl implements Parser {
 
     private List<Map<String, Integer>> maps;
     private Map<String, Integer> result;
 
-    public ParserFirst() {
-        maps = new ArrayList<>();;
+    public ParserImpl() {
+        maps = new ArrayList<>();
     }
 
     @Override
@@ -71,6 +71,9 @@ public class ParserFirst implements Parser {
     }
 
     private Map<String, Integer> concatTwoMaps(Map<String, Integer> result, Map<String, Integer> map2) {
+        // short, but very slow
+//        map2.forEach((k, v) -> result.merge(k, v, Integer::sum));
+
         for (Map.Entry<String, Integer> entry : map2.entrySet()) {
             String line = entry.getKey();
             if (result.containsKey(line)) {
