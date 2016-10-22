@@ -11,7 +11,7 @@ public class SortByValue {
 
         List<Map.Entry<String, Integer>> list = new LinkedList<>(unsortMap.entrySet());
 
-        Collections.sort(list, (o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
+        list.sort((o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
 
         Map<String, Integer> sortedMap = new LinkedHashMap<>();
 

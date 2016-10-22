@@ -16,9 +16,8 @@ import java.util.Map;
 public class ParserImpl implements Parser {
 
     private List<Map<String, Integer>> maps;
-    private Map<String, Integer> result;
 
-    public ParserImpl() {
+    ParserImpl() {
         maps = new ArrayList<>();
     }
 
@@ -52,6 +51,7 @@ public class ParserImpl implements Parser {
 
     @Override
     public Map<String, Integer> getResult() {
+        Map<String, Integer> result;
         if (maps.size() > 1) {
             result = concatMaps(maps);
         } else {
