@@ -22,8 +22,8 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public Map<String, Integer> run(long session) {
-        List<Integer> filesId = manager.selectIdBySession(session);
+    public Map<String, Integer> run(long sessionTime) {
+        List<Integer> filesId = manager.selectIdBySession(sessionTime);
 
         selectFilesFromSession(filesId);
 
