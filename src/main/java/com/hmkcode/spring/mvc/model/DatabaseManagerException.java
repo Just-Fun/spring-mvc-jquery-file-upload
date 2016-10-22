@@ -5,7 +5,7 @@ package com.hmkcode.spring.mvc.model;
  */
 public class DatabaseManagerException extends RuntimeException {
 
-    public DatabaseManagerException(String message, Throwable cause) {
+    DatabaseManagerException(String message, Throwable cause) {
         super(message, cause);
     }
 }
