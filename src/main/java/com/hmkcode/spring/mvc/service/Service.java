@@ -7,4 +7,6 @@ import java.util.Map;
  */
 public interface Service {
     Map<String, Integer> run(long session);
+
+//    Parser getParser();
 }
