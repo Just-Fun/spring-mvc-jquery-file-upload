@@ -1,3 +1,5 @@
+CREATE DATABASE upload;
+
 CREATE TABLE files(
   id SERIAL PRIMARY KEY,
   name CHAR(50) NOT NULL,
