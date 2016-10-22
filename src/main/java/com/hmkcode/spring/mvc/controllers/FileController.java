@@ -28,16 +28,15 @@ import com.hmkcode.spring.mvc.data.FileMeta;
 @RequestMapping("/controller")
 public class FileController {
 
-    DatabaseManager manager = new PostgreSQLManager();;
-    Service service;
+    private DatabaseManager manager = new PostgreSQLManager(); // TODO bean
+    private Service service;
 
-    LinkedList<FileMeta> files = new LinkedList<>();
-    FileMeta fileMeta = null;
-    long sessionTime = 0;
+    private LinkedList<FileMeta> files = new LinkedList<>();
+    private long sessionTime = 0;
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public LinkedList<FileMeta> upload(MultipartHttpServletRequest request, /*HttpServletResponse response, */HttpSession session) throws IOException {
+    public LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpSession session) throws IOException {
 
         sessionTime = session.getCreationTime();
         MultipartFile mpf;
@@ -49,7 +48,7 @@ public class FileController {
                 mpf = request.getFile(itr.next());
                 String originalFilename = mpf.getOriginalFilename();
 
-                fileMeta = new FileMeta();
+                FileMeta fileMeta = new FileMeta();
                 fileMeta.setFileName(originalFilename);
                 fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
                 fileMeta.setFileType(mpf.getContentType());
