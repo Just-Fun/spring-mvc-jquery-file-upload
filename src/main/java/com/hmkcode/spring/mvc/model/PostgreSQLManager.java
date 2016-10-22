@@ -22,7 +22,6 @@ public class PostgreSQLManager implements DatabaseManager {
         loadProperties();
     }
 
-    private static final String ERROR = "It is impossible because: ";
     private static String host;
     private static String port;
 
