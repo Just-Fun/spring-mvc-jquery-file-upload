@@ -137,20 +137,18 @@ public class PostgreSQLManager implements DatabaseManager {
 
     @Override
     public LinkedHashMap<String, Integer> getMapFromResultById(int id) throws Exception {
-        LinkedHashMap<String, Integer> result = null;
         String query = String.format("SELECT result FROM results where id='%d'", id);
-
-        return getMap(result, query);
+        return getMap(query);
     }
 
     @Override
     public LinkedHashMap<String, Integer> getMapFromResultBySession(long session) throws Exception {
-        LinkedHashMap<String, Integer> result = null;
         String query = String.format("SELECT result FROM results where session='%d'", session);
-        return getMap(result, query);
+        return getMap(query);
     }
 
-    private LinkedHashMap<String, Integer> getMap(LinkedHashMap<String, Integer> result, String query) throws SQLException {
+    private LinkedHashMap<String, Integer> getMap(String query) throws SQLException {
+        LinkedHashMap<String, Integer> result = null;
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
