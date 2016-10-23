@@ -14,15 +14,4 @@
  	<mvc:annotation-driven/>
  	<bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
-
-<!--	<bean  id="fileController" class="com.hmkcode.spring.mvc.controllers.FileController">
-		&lt;!&ndash;<property name="sevice" ref="service" />&ndash;&gt;
-		&lt;!&ndash;<constructor-arg ref="manager"/>&ndash;&gt;
-		&lt;!&ndash;<constructor-arg ref="service"/>&ndash;&gt;
-	</bean>
-
-	<bean  id="service" class="com.hmkcode.spring.mvc.service.ParserImpl" autowire="byName"/>
-
-	<bean id="manager" class="com.hmkcode.spring.mvc.model.PostgreSQLManager"/>-->
-
 </beans>

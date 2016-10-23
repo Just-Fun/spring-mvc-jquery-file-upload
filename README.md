@@ -15,18 +15,26 @@ with the number of occurrences of the string in all files.
 
 In project we use PostgreSQL database.
 
-Create DATABASE and 2 tables (you can change `database name`):
+Create DATABASE (you can change `database name`):
 
 ``` 
 CREATE DATABASE upload;
+```
 
+Create a “files” table.
+
+```
 CREATE TABLE files(
      id SERIAL PRIMARY KEY,
      name CHAR(50) NOT NULL,
      file BYTEA,
      session BIGINT
 )
-       
+```
+  
+Create a “results” table.
+
+```
 CREATE TABLE results (
     id  SERIAL PRIMARY KEY,
     session BIGINT,
@@ -42,6 +50,7 @@ If you changed `database name` during creating database also change `databaseNam
 ```
 userName = userName of your DB
 password = password of your DB
+database = upload (or created databaseName)
 ```
 
 ## Running the tests
