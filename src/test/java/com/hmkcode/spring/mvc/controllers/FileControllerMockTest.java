@@ -1,13 +1,8 @@
 package com.hmkcode.spring.mvc.controllers;
 
-import com.hmkcode.spring.mvc.data.FileMeta;
 import com.hmkcode.spring.mvc.model.DatabaseManager;
-import com.hmkcode.spring.mvc.service.Parser;
-import com.hmkcode.spring.mvc.service.Service;
-import com.hmkcode.spring.mvc.service.ServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -16,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
