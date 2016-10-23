@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -36,7 +37,7 @@ public class FileController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpSession session) throws IOException {
+    public List<FileMeta> upload(MultipartHttpServletRequest request, HttpSession session) throws IOException {
 
         sessionTime = session.getCreationTime();
         MultipartFile mpf;
@@ -63,9 +64,10 @@ public class FileController {
     }
 
     @RequestMapping(value = "/getResult", method = RequestMethod.GET)
-    public void getResult(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+    public void getResult(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+            throws ServletException, IOException {
 
-        if (sessionTime == 0) {
+        if (getSessionTime() == 0) {
             response.sendRedirect("/spring-mvc-jquery-file-upload");
         } else {
             service = new ServiceImpl(manager);
@@ -78,5 +80,9 @@ public class FileController {
             files = new LinkedList<>();
             manager.insertResult(sessionTime, result);
         }
+    }
+
+    private long getSessionTime() {
+        return sessionTime;
     }
 }
