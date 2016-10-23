@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.hmkcode.spring.mvc.service.SortByValue.sortByValue;
+
 /**
  * Created by Serzh on 10/18/16.
  */
@@ -57,7 +59,7 @@ public class ParserImpl implements Parser {
         } else {
             result = maps.get(0);
         }
-        return SortByValue.sortByValue(result);
+        return sortByValue(result);
     }
 
     private Map<String, Integer> concatMaps(List<Map<String, Integer>> maps) {
