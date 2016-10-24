@@ -51,7 +51,7 @@ public class FileControllerMockTest {
 
         when(session.getCreationTime()).thenReturn(sessionTime);
         when(request.getFileNames()).thenReturn(itr);
-        when(request.getFile(itr.next())).thenReturn(firstFile); // TODO understand why 'mpf' == null
+        when(request.getFile(itr.next())).thenReturn(firstFile); // TODO understand why 'mpf' == null still
         when(request.getFile(itr.next())).thenReturn(firstFile);
 
         controller.upload(request, session);

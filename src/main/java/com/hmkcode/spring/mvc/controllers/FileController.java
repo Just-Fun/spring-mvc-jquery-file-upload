@@ -16,6 +16,7 @@ import com.hmkcode.spring.mvc.model.DatabaseManager;
 import com.hmkcode.spring.mvc.model.PostgreSQLManager;
 import com.hmkcode.spring.mvc.service.Service;
 import com.hmkcode.spring.mvc.service.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +29,8 @@ import com.hmkcode.spring.mvc.data.FileMeta;
 @Controller
 @RequestMapping("/controller")
 public class FileController {
-    // TODO beans
+    // TODO make manager & service Autowired
+
     private DatabaseManager manager = new PostgreSQLManager();
     private Service service;
 

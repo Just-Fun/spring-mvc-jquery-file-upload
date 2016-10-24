@@ -14,7 +14,6 @@ import static com.hmkcode.spring.mvc.service.SortByValue.sortByValue;
 /**
  * Created by Serzh on 10/18/16.
  */
-// TODO optimization algorithm (check if MapReduce will be faster)
 public class ParserImpl implements Parser {
 
     private List<Map<String, Integer>> maps;
